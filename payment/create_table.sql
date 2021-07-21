@@ -126,3 +126,20 @@ CONSTRAINT payment_payment_method_fk
            FOREIGN KEY (payment_method_id)
            REFERENCES PaymentMethod(payment_method_id)
 );
+
+-----------------
+-- 6. Customer --
+-----------------
+CREATE TABLE Customer(
+	cust_id 		VARCHAR2(6)		NOT NULL,
+	name			VARCHAR2(40)	NOT NULL,
+	ic				VARCHAR2(12)	NOT NULL,
+	dob				DATE,
+	phone			VARCHAR2(13)	NOT NULL,
+	email			VARCHAR2(45)	NOT NULL,
+	created_at		VARCHAR2(10)	NOT NULL,
+	updated_at		VARCHAR2(10)	NOT NULL,
+CONSTRAINT customer_pk PRIMARY KEY (cust_id),
+CONSTRAINT chk_email (REGEXP_LIKE(email, '^[0-9a-zA-Z]\w+@(\s+)$'))
+);
+
