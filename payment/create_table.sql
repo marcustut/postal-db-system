@@ -145,8 +145,12 @@ CREATE TABLE Customer(
 	email			VARCHAR2(45)	NOT NULL,
 	created_at		VARCHAR2(10)	NOT NULL,
 	updated_at		VARCHAR2(10)	NOT NULL,
+	address_id		VARCHAR2(100)	NOT NULL,
 CONSTRAINT customer_pk PRIMARY KEY (cust_id),
 CONSTRAINT chk_email (REGEXP_LIKE(email, '^[0-9a-zA-Z]\w+@(\s+)$'))
+CONSTRAINT customer_address_fk
+			FOREIGN KEY (address_id)
+			REFERENCES Address(address_id)
 );
 
 -----------------
@@ -356,3 +360,38 @@ BEGIN
     FROM    dual;
 END;
 /	
+
+------------------
+-- 12. Services --
+------------------
+CREATE TABLE Services{
+	services_id 	VARCHAR2(6) NOT NULL,
+	type 			CHAR(10) NOT NULL,
+	description 	CHAR(50) NOT NULL,
+	price 			NUMBER(5,2) NOT NULL,
+CONSTRAINT services_pk PRIMARY KEY (services_id)
+CONSTRAINT services_type_check CHECK (type IN ('standard', 'express'))
+);
+
+-------------------
+-- 13. Insurance --
+-------------------
+CREATE TABLE Insurance{
+	insurance_id 	VARCHAR2(6) NOT NULL,
+	type 			VARCHAR(10) NOT NULL,
+	rate 			NUMBER(5,2) NOT NULL,
+	price 			NUMBER(5,2) NOT NULL,
+CONSTRAINT insurance_pk PRIMARY KEY (insurance_id)
+CONSTRAINT insurance_type_check CHECK (type IN ('bronze', 'silver', 'gold', 'platinum'))
+);
+
+-----------------
+-- 14. Pricing --
+-----------------
+CREATE TABLE Pricing{
+	pricing_id 		VARCHAR2(6) NOT NULL,
+	weight 			NUMBER(5) 	NOT NULL,
+	east_price 		NUMBER(5,2) NOT NULL,
+	west_price 		NUMBER(5,2) NOT NULL,
+CONSTRAINT pricing_pk PRIMARY KEY (pricing_id)
+);
