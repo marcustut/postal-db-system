@@ -14,6 +14,12 @@
 -- 3. BillingDetails
 -- 4. PaymentMethod
 -- 5. Payment
+-- 6. Customer
+-- 7. Staff
+-- 8. Vehicle
+-- 9. TaskAllocation
+-- 10. Parcel
+-- 11. Tracking
 
 -- Only uncomment the below if needed
 -- -- Settings for Oracle 
@@ -143,3 +149,210 @@ CONSTRAINT customer_pk PRIMARY KEY (cust_id),
 CONSTRAINT chk_email (REGEXP_LIKE(email, '^[0-9a-zA-Z]\w+@(\s+)$'))
 );
 
+-----------------
+--- 7. Staff ---
+-----------------
+CREATE TABLE Staff(
+	staff_id		NUMBER, --PK
+	staff_name		VARCHAR2	NOT NULL,
+	email 			VARCHAR2 	NOT NULL,
+	phone			VARCHAR2	NOT NULL,
+	branch 			VARCHAR2	NOT NULL,
+CONSTRAINT staff_pk PRIMARY KEY (staff_id),
+CONSTRAINT check_semail (REGEXP_LIKE(email, '^[0-9a-zA-Z]\w+@(\s+)$'))
+);
+
+-- Following code is to auto-increment staff_id
+
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE staff_id_seq 
+				INCREMENT BY 1
+				START WITH 7001
+				NOCYCLE
+				CACHE 20;
+
+-- Below code is to trigger sequence to increment by 1 when CREATE or REPLACE is detected.
+CREATE OR REPLACE TRIGGER staff_id_bir
+BEFORE INSERT ON Staff
+FOR EACH ROW
+
+BEGIN
+    SELECT  staff_id_seq.NEXTVAL
+    INTO    :new.staff_id
+    FROM    dual;
+END;
+/
+
+-----------------
+-- 8. Vehicle --
+-----------------
+CREATE TABLE Vehicle(
+	vehicle_id				NUMBER, --PK
+	car_plate_no			VARCHAR2	NOT NULL,
+	transportation_type 	VARCHAR2 	NOT NULL,	
+CONSTRAINT vehicle_pk PRIMARY KEY (vehicle_id),
+CONSTRAINT vehicle_type_check CHECK (transportation_type IN ('motorcycle', 'van', 'airplane'))
+);
+-- Following code is to auto-increment vehicle_id
+
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE vehicle_id_seq 
+				INCREMENT BY 1
+				START WITH 8001
+				NOCYCLE
+				CACHE 20;
+
+-- Below code is to trigger sequence to increment by 1 when CREATE or REPLACE is detected.
+CREATE OR REPLACE TRIGGER vehicle_id_bir
+BEFORE INSERT ON Vehicle
+FOR EACH ROW
+
+BEGIN
+    SELECT  vehicle_id_seq.NEXTVAL
+    INTO    :new.vehicle_id
+    FROM    dual;
+END;
+/
+
+-----------------------
+-- 9. TaskAllocation --
+-----------------------
+CREATE TABLE TaskAllocation(
+	delivery_id		NUMBER;		--PK
+	staff_id		NUMBER,	--PK,FK
+	vehicle_id		NUMBER,	--PK,FK
+	delivery_date	DATE	NOT NULL,
+	
+PRIMARY KEY(delivery_id, staff_id, vehicle_id),
+CONSTRAINT chk_identifications_staff
+           FOREIGN KEY (staff_id)
+           REFERENCES Staff(staff_id)
+           ON DELETE CASCADE -- If the disease is deleted, this record is deleted as well
+CONSTRAINT chk_identifications_vehicle
+           FOREIGN KEY (vehicle_id)
+           REFERENCES Vehicle(vehicle_id)
+           ON DELETE CASCADE -- If the disease is deleted, this record is deleted as well		   
+);
+-- Following code is to auto-increment delivery_id
+
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE delivery_id_seq 
+				INCREMENT BY 1
+				START WITH 9001
+				NOCYCLE
+				CACHE 20;
+
+-- Below code is to trigger sequence to increment by 1 when CREATE or REPLACE is detected.
+CREATE OR REPLACE TRIGGER delivery_id_bir
+BEFORE INSERT ON TaskAllocation
+FOR EACH ROW
+
+BEGIN
+    SELECT  delivery_id_seq.NEXTVAL
+    INTO    :new.delivery_id
+    FROM    dual;
+END;
+/
+
+-----------------
+-- 10. Parcel --
+-----------------
+CREATE TABLE Parcel(
+	parcel_id			NUMBER,		--PK
+	type				VARCHAR2	NOT NULL,
+	weight				NUMBER(4)	NOT NULL,
+	details				VARCHAR2,
+	receipient_name		VARCHAR2	NOT NULL,
+	receipient_contact  VARCHAR2	NOT NULL,
+	created_at			DATE		NOT NULL,
+	updated_at			DATE,
+	delivery_id			NUMBER,
+	services_id			NUMBER,
+	insurance_id		NUMBER,
+	order_id			NUMBER,
+	address_id			NUMBER,
+	pricing_id			NUMBER,
+PRIMARY KEY(delivery_id, staff_id, vehicle_id),
+CONSTRAINT parcel_type_check CHECK (type IN ('fragile', 'flammable', 'normal'))
+CONSTRAINT chk_identifications_delivery
+           FOREIGN KEY (delivery_id)
+           REFERENCES TaskAllocation(delivery_id)
+           ON DELETE CASCADE -- If the disease is deleted, this record is deleted as well
+CONSTRAINT chk_identifications_services
+           FOREIGN KEY (services_id)
+           REFERENCES Services(services_id)
+           ON DELETE CASCADE -- If the disease is deleted, this record is deleted as well
+CONSTRAINT chk_identifications_insurance
+           FOREIGN KEY (insurance_id_id)
+           REFERENCES Insurance(insurance_id)
+           ON DELETE CASCADE -- If the disease is deleted, this record is deleted as well
+CONSTRAINT chk_identifications_order
+           FOREIGN KEY (order_id)
+           REFERENCES Order(order_id)
+           ON DELETE CASCADE -- If the disease is deleted, this record is deleted as well		   
+CONSTRAINT chk_identifications_address
+           FOREIGN KEY (address_id)
+           REFERENCES Address(address_id)
+           ON DELETE CASCADE -- If the disease is deleted, this record is deleted as well
+CONSTRAINT chk_identifications_price
+           FOREIGN KEY (pricing_id)
+           REFERENCES Pricing(pricing_id)
+           ON DELETE CASCADE -- If the disease is deleted, this record is deleted as well		   		  
+);
+-- Following code is to auto-increment parcel_id
+
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE parcel_id_seq 
+				INCREMENT BY 1
+				START WITH 10001
+				NOCYCLE
+				CACHE 20;
+
+-- Below code is to trigger sequence to increment by 1 when CREATE or REPLACE is detected.
+CREATE OR REPLACE TRIGGER parcel_id_bir
+BEFORE INSERT ON Parcel
+FOR EACH ROW
+
+BEGIN
+    SELECT  parcel_id_seq.NEXTVAL
+    INTO    :new.parcel_id
+    FROM    dual;
+END;
+/
+
+------------------
+-- 11. Tracking --
+------------------
+CREATE TABLE Tracking(
+	tracking_id		NUMBER,		--PK
+	status			VARCHAR2	NOT NULL,
+	remark			VARCHAR2,
+	created_at		DATE		NOT NULL,
+	parcel_id		NUMBER,
+CONSTRAINT tracking_pk PRIMARY KEY (tracking_id),
+CONSTRAINT tracking_status_check CHECK (status IN ('pending', 'delivering', 'deliverd','canceled'))
+CONSTRAINT chk_identifications_parcel
+           FOREIGN KEY (parcel_id)
+           REFERENCES Parcel(parcel_id)
+           ON DELETE CASCADE -- If the disease is deleted, this record is deleted as well
+);
+-- Following code is to auto-increment tracking_id
+
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE tracking_id_seq 
+				INCREMENT BY 1
+				START WITH 11001
+				NOCYCLE
+				CACHE 20;
+
+-- Below code is to trigger sequence to increment by 1 when CREATE or REPLACE is detected.
+CREATE OR REPLACE TRIGGER tracking_id_bir
+BEFORE INSERT ON Tracking
+FOR EACH ROW
+
+BEGIN
+    SELECT  tracking_id_seq.NEXTVAL
+    INTO    :new.tracking_id
+    FROM    dual;
+END;
+/	
