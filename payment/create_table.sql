@@ -379,7 +379,7 @@ CONSTRAINT services_type_check CHECK (type IN ('standard', 'express'))
 CREATE TABLE Insurance{
 	insurance_id 	VARCHAR2(6) NOT NULL,
 	type 			VARCHAR(10) NOT NULL,
-	rate 			NUMBER(5,2) NOT NULL,
+	rate 			NUMBER(8,2) NOT NULL,
 	price 			NUMBER(5,2) NOT NULL,
 CONSTRAINT insurance_pk PRIMARY KEY (insurance_id)
 CONSTRAINT insurance_type_check CHECK (type IN ('bronze', 'silver', 'gold', 'platinum'))
