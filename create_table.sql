@@ -44,6 +44,25 @@ CREATE TABLE Address (
 CONSTRAINT address_pk PRIMARY KEY (address_id)
 );
 
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE address_id_seq
+  START WITH 1001
+  INCREMENT BY 1
+  NOCYCLE 
+  CACHE 20;
+
+-- Below code is to trigger sequence to increment by 1 when CREATE or REPLACE is detected.
+CREATE OR REPLACE TRIGGER address_id_bir
+BEFORE INSERT ON address
+FOR EACH ROW
+
+BEGIN
+    SELECT  address_id_seq.NEXTVAL
+    INTO    :new.address_id
+    FROM    dual;
+END;
+/
+
 -------------
 -- 2. Card --
 -------------
