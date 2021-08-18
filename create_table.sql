@@ -14,14 +14,14 @@
 -- 3. Customer
 -- 4. PaymentMethod
 -- 5. Payment
--- 6. Staff
--- 7. Vehicle
--- 8. TaskAllocation
--- 9. Parcel
--- 10. Tracking
--- 11. Service
--- 12. Insurance
--- 13. Pricing
+-- 6. Service
+-- 7. Insurance
+-- 8. Pricing
+-- 9. Staff
+-- 10. Vehicle
+-- 11. TaskAllocation
+-- 12. Parcel
+-- 13. Tracking
 
 -- Only uncomment the below if needed
 -- -- Settings for Oracle 
@@ -228,15 +228,52 @@ BEGIN
 END;
 /
 
+
+
+------------------
+-- 6. Service --
+------------------
+CREATE TABLE Service (
+	service_id 	  VARCHAR2(6) NOT NULL,
+	type 			    CHAR(10) NOT NULL,
+	description 	CHAR(50) NOT NULL,
+	price 			  NUMBER(5,2) NOT NULL,
+CONSTRAINT service_pk PRIMARY KEY (service_id),
+CONSTRAINT service_type_chk CHECK (type IN ('standard', 'express'))
+);
+
+-------------------
+-- 7. Insurance --
+-------------------
+CREATE TABLE Insurance (
+	insurance_id 	VARCHAR2(6) NOT NULL,
+	type 			    VARCHAR(10) NOT NULL,
+	rate 			    NUMBER(8,2) NOT NULL,
+	price 			  NUMBER(5,2) NOT NULL,
+CONSTRAINT insurance_pk PRIMARY KEY (insurance_id),
+CONSTRAINT insurance_type_check CHECK (type IN ('bronze', 'silver', 'gold', 'platinum'))
+);
+
 -----------------
---- 6. Staff ---
+-- 8. Pricing --
+-----------------
+CREATE TABLE Pricing (
+	pricing_id 		VARCHAR2(6) NOT NULL,
+	weight 			  NUMBER(5) 	NOT NULL,
+	east_price 		NUMBER(5,2) NOT NULL,
+	west_price 		NUMBER(5,2) NOT NULL,
+CONSTRAINT pricing_pk PRIMARY KEY (pricing_id)
+);
+
+-----------------
+--- 9. Staff ---
 -----------------
 CREATE TABLE Staff (
-	staff_id		  NUMBER, -- PK
-	staff_name		VARCHAR2	NOT NULL,
-	email 			  VARCHAR2 	NOT NULL,
-	phone			    VARCHAR2	NOT NULL,
-	branch 			  VARCHAR2	NOT NULL,
+	staff_id		NUMBER, -- PK
+	staff_name		VARCHAR2(40)	NOT NULL,
+	email 			VARCHAR2(45) 	NOT NULL,
+	phone			VARCHAR2(13)	NOT NULL,
+	branch 			VARCHAR2(20)	NOT NULL,
 CONSTRAINT staff_pk PRIMARY KEY (staff_id),
 CONSTRAINT staff_email_chk (REGEXP_LIKE(email, '^[a-zA-Z]\w+@(\S+)$')),
 CONSTRAINT staff_phone_chk CHECK (REGEXP_LIKE(phone, '^(\+?6?01)[0|1|2|3|4|6|7|8|9]-*[0-9]{7,8}$'))
@@ -244,7 +281,7 @@ CONSTRAINT staff_phone_chk CHECK (REGEXP_LIKE(phone, '^(\+?6?01)[0|1|2|3|4|6|7|8
 
 -- This sequence is to auto increment the id.
 CREATE SEQUENCE staff_id_seq 
-  START WITH 6001
+  START WITH 9001
   INCREMENT BY 1
   NOCYCLE
   CACHE 20;
@@ -262,19 +299,19 @@ END;
 /
 
 -----------------
--- 7. Vehicle --
+-- 10. Vehicle --
 -----------------
 CREATE TABLE Vehicle (
-	vehicle_id				    NUMBER, -- PK
-	car_plate_no			    VARCHAR2	NOT NULL,
-	transportation_type 	VARCHAR2 	NOT NULL,	
+	vehicle_id				NUMBER, -- PK
+	car_plate_no			VARCHAR2(7)		NOT NULL,
+	transportation_type 	VARCHAR2(10) 	NOT NULL,	
 CONSTRAINT vehicle_pk PRIMARY KEY (vehicle_id),
 CONSTRAINT vehicle_transportation_type_chk CHECK (transportation_type IN ('motorcycle', 'van', 'airplane'))
 );
 
 -- This sequence is to auto increment the id.
 CREATE SEQUENCE vehicle_id_seq 
-  START WITH 7001
+  START WITH 10001
   INCREMENT BY 1
   NOCYCLE
   CACHE 20;
@@ -292,11 +329,11 @@ END;
 /
 
 -----------------------
--- 8. TaskAllocation --
+-- 11. TaskAllocation --
 -----------------------
 CREATE TABLE TaskAllocation (
 	delivery_id		NUMBER,	--PK
-	staff_id		  NUMBER,	--PK,FK
+	staff_id		NUMBER,	--PK,FK
 	vehicle_id		NUMBER,	--PK,FK
 	delivery_date	DATE NOT NULL,
 CONSTRAINT taskallocation_pk PRIMARY KEY(delivery_id, staff_id, vehicle_id),
@@ -312,7 +349,7 @@ CONSTRAINT taskallocation_vehicle_fk
 
 -- This sequence is to auto increment the id.
 CREATE SEQUENCE delivery_id_seq 
-  START WITH 8001
+  START WITH 11001
   INCREMENT BY 1
   NOCYCLE
   CACHE 20;
@@ -330,23 +367,23 @@ END;
 /
 
 -----------------
--- 9. Parcel --
+-- 12. Parcel --
 -----------------
 CREATE TABLE Parcel (
-	parcel_id			       NUMBER,		--PK
-	type				         VARCHAR2	NOT NULL,
-	weight				       NUMBER(4) NOT NULL,
-	details				       VARCHAR2,
-	receipient_name      VARCHAR2 NOT NULL,
-	receipient_contact   VARCHAR2 NOT NULL,
-	created_at			     DATE NOT NULL,
-	updated_at			     DATE,
-	delivery_id			     NUMBER, -- FK
-	service_id			     NUMBER, -- FK 
-	insurance_id		     NUMBER, -- FK
-	order_id  		       NUMBER, -- FK
-	address_id		       NUMBER, -- FK
-	pricing_id		       NUMBER, -- FK
+	parcel_id			    NUMBER,		--PK
+	type				    VARCHAR2(10)	NOT NULL,
+	weight				    NUMBER(4) NOT NULL,
+	details				    VARCHAR2(50),
+	receipient_name      	VARCHAR2 NOT NULL,
+	receipient_contact   	VARCHAR2 NOT NULL,
+	created_at			    DATE NOT NULL,
+	updated_at			    DATE,
+	delivery_id			    NUMBER, -- FK
+	service_id			    NUMBER, -- FK 
+	insurance_id		    NUMBER, -- FK
+	order_id  		       	NUMBER, -- FK
+	address_id		        NUMBER, -- FK
+	pricing_id		        NUMBER, -- FK
 CONSTRAINT parcel_pk PRIMARY KEY(parcel_id),
 CONSTRAINT parcel_type_chk CHECK (type IN ('fragile', 'flammable', 'normal')),
 CONSTRAINT parcel_taskallocation_fk
@@ -371,7 +408,7 @@ CONSTRAINT parcel_pricing_fk
 
 -- This sequence is to auto increment the id.
 CREATE SEQUENCE parcel_id_seq 
-  START WITH 9001
+  START WITH 12001
   INCREMENT BY 1
   NOCYCLE
   CACHE 20;
@@ -389,14 +426,14 @@ END;
 /
 
 ------------------
--- 10. Tracking --
+-- 13. Tracking --
 ------------------
 CREATE TABLE Tracking (
 	tracking_id		NUMBER, --PK
-	status			  VARCHAR2 NOT NULL,
-	remark			  VARCHAR2,
+	status			VARCHAR2(10) NOT NULL,
+	remark			VARCHAR2(50),
 	created_at		DATE NOT NULL,
-	parcel_id		  NUMBER, -- FK
+	parcel_id		NUMBER, -- FK
 CONSTRAINT tracking_pk PRIMARY KEY (tracking_id),
 CONSTRAINT tracking_status_chk CHECK (status IN ('pending', 'delivering', 'deliverd','canceled')),
 CONSTRAINT tracking_parcel_fk
@@ -407,7 +444,7 @@ CONSTRAINT tracking_parcel_fk
 
 -- This sequence is to auto increment the id.
 CREATE SEQUENCE tracking_id_seq 
-  START WITH 10001
+  START WITH 13001
   INCREMENT BY 1
   NOCYCLE
   CACHE 20;
@@ -423,38 +460,3 @@ BEGIN
     FROM    dual;
 END;
 /	
-
-------------------
--- 11. Service --
-------------------
-CREATE TABLE Service (
-	service_id 	  VARCHAR2(6) NOT NULL,
-	type 			    CHAR(10) NOT NULL,
-	description 	CHAR(50) NOT NULL,
-	price 			  NUMBER(5,2) NOT NULL,
-CONSTRAINT service_pk PRIMARY KEY (service_id),
-CONSTRAINT service_type_chk CHECK (type IN ('standard', 'express'))
-);
-
--------------------
--- 12. Insurance --
--------------------
-CREATE TABLE Insurance (
-	insurance_id 	VARCHAR2(6) NOT NULL,
-	type 			    VARCHAR(10) NOT NULL,
-	rate 			    NUMBER(8,2) NOT NULL,
-	price 			  NUMBER(5,2) NOT NULL,
-CONSTRAINT insurance_pk PRIMARY KEY (insurance_id),
-CONSTRAINT insurance_type_check CHECK (type IN ('bronze', 'silver', 'gold', 'platinum'))
-);
-
------------------
--- 13. Pricing --
------------------
-CREATE TABLE Pricing (
-	pricing_id 		VARCHAR2(6) NOT NULL,
-	weight 			  NUMBER(5) 	NOT NULL,
-	east_price 		NUMBER(5,2) NOT NULL,
-	west_price 		NUMBER(5,2) NOT NULL,
-CONSTRAINT pricing_pk PRIMARY KEY (pricing_id)
-);
