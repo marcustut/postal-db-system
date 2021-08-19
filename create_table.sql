@@ -242,6 +242,25 @@ CONSTRAINT service_pk PRIMARY KEY (service_id),
 CONSTRAINT service_type_chk CHECK (type IN ('standard', 'express'))
 );
 
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE service_id_seq
+  START WITH 6001
+  INCREMENT BY 1
+  NOCYCLE 
+  CACHE 20;
+
+-- Below trigger is used to auto-increment the id with the use of sequence
+CREATE OR REPLACE TRIGGER service_id_ai_trg
+BEFORE INSERT ON Service
+FOR EACH ROW
+
+BEGIN
+    SELECT  service_id_seq.NEXTVAL
+    INTO    :new.service_id
+    FROM    dual;
+END;
+/
+
 -------------------
 -- 7. Insurance --
 -------------------
@@ -254,16 +273,55 @@ CONSTRAINT insurance_pk PRIMARY KEY (insurance_id),
 CONSTRAINT insurance_type_check CHECK (type IN ('bronze', 'silver', 'gold', 'platinum'))
 );
 
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE insurance_id_seq
+  START WITH 7001
+  INCREMENT BY 1
+  NOCYCLE 
+  CACHE 20;
+
+-- Below trigger is used to auto-increment the id with the use of sequence
+CREATE OR REPLACE TRIGGER insurance_id_ai_trg
+BEFORE INSERT ON Insurance
+FOR EACH ROW
+
+BEGIN
+    SELECT  insurance_id_seq.NEXTVAL
+    INTO    :new.insurance_id
+    FROM    dual;
+END;
+/
+
 -----------------
 -- 8. Pricing --
 -----------------
 CREATE TABLE Pricing (
 	pricing_id 		VARCHAR2(6) NOT NULL,
-	weight 			  NUMBER(5) 	NOT NULL,
+	lowest_weight 	NUMBER(5) 	NOT NULL,
+	highest_weight 	NUMBER(5) 	NOT NULL,
 	east_price 		NUMBER(5,2) NOT NULL,
 	west_price 		NUMBER(5,2) NOT NULL,
 CONSTRAINT pricing_pk PRIMARY KEY (pricing_id)
 );
+
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE pricing_id_seq
+  START WITH 8001
+  INCREMENT BY 1
+  NOCYCLE 
+  CACHE 20;
+
+-- Below trigger is used to auto-increment the id with the use of sequence
+CREATE OR REPLACE TRIGGER pricing_id_ai_trg
+BEFORE INSERT ON Pricing
+FOR EACH ROW
+
+BEGIN
+    SELECT  pricing_id_seq.NEXTVAL
+    INTO    :new.pricing_id
+    FROM    dual;
+END;
+/
 
 -----------------
 --- 9. Staff ---
