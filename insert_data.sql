@@ -17,3 +17,14 @@ INSERT INTO Customer (name, ic, dob, phone, email, created_at, updated_at, addre
 -- 4. PaymentMethod --
 ----------------------
 INSERT INTO PaymentMethod (type, created_at, updated_at, cust_id, card_id) VALUES ('fpx', SYSDATE, SYSDATE, 3001, 2001);
+
+
+-----------------
+--- 9. Staff ---
+-----------------
+INSERT INTO Staff (staff_name, email, phone, branch) VALUES ('Pang Xue Ni','xn@gmail.com','0123456789','KL');
+
+-----------------
+-- 10. Vehicle --
+-----------------
+INSERT INTO Vehicle (car_plate_no, transportation_type) VALUES ('WTK9971','car');
