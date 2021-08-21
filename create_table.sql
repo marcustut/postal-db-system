@@ -23,18 +23,17 @@
 -- 12. Parcel
 -- 13. Tracking
 
--- Only uncomment the below if needed
--- -- Settings for Oracle 
--- SET linesize 120
--- SET pagesize 100
--- ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY';
--- 
--- -- Settings for PL/SQL
--- SET serveroutput ON -- Turning on the output for printing info from PL/SQL
+-- Settings for Oracle 
+SET linesize 120
+SET pagesize 100
+ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MM/YYYY';
+
+-- Settings for PL/SQL
+SET serveroutput ON -- Turning on the output for printing info from PL/SQL
 -- WHENEVER SQLERROR EXIT SQL.SQLCODE ROLLBACK; -- Exit the script execution whenever an exception is raised
 -- 
--- -- Startup Screen for Users
--- cl scr
+-- Startup Screen for Users
+cl scr
 
 ----------------
 -- 1. Address --
@@ -47,8 +46,8 @@ CREATE TABLE Address (
   line1               VARCHAR2(255) NOT NULL,
   line2               VARCHAR2(255),
   postal_code         CHAR(5) NOT NULL,
-  created_at          DATE NOT NULL,
-  updated_at          DATE NOT NULL,
+  created_at          DATE DEFAULT SYSDATE NOT NULL,
+  updated_at          DATE DEFAULT SYSDATE NOT NULL,
 CONSTRAINT address_pk PRIMARY KEY (address_id)
 );
 
@@ -81,8 +80,8 @@ CREATE TABLE Card (
   exp_month           NUMBER(2) NOT NULL,
   exp_year            NUMBER(4) NOT NULL,
   last4               CHAR(4) NOT NULL,
-  created_at          DATE NOT NULL,
-  updated_at          DATE NOT NULL,
+  created_at          DATE DEFAULT SYSDATE NOT NULL,
+  updated_at          DATE DEFAULT SYSDATE NOT NULL,
 CONSTRAINT card_pk PRIMARY KEY (card_id),
 CONSTRAINT card_brand_chk CHECK (brand IN ('visa', 'unionpay', 'amex', 'mastercard'))
 );
@@ -152,8 +151,8 @@ END;
 CREATE TABLE PaymentMethod (
   payment_method_id   NUMBER, -- PK
   type                VARCHAR2(25) NOT NULL,
-  created_at          DATE NOT NULL,
-  updated_at          DATE NOT NULL,
+  created_at          DATE DEFAULT SYSDATE NOT NULL,
+  updated_at          DATE DEFAULT SYSDATE NOT NULL,
   cust_id             NUMBER NOT NULL, -- FK
   card_id             NUMBER, -- FK
 CONSTRAINT payment_method_pk PRIMARY KEY (payment_method_id),
@@ -198,8 +197,8 @@ CREATE TABLE Payment (
   tax                 NUMBER NOT NULL,
   canceled_at         DATE,
   succeeded_at        DATE,
-  created_at          DATE NOT NULL,
-  updated_at          DATE NOT NULL,
+  created_at          DATE DEFAULT SYSDATE NOT NULL,
+  updated_at          DATE DEFAULT SYSDATE NOT NULL,
   payment_method_id   NUMBER, -- FK
 CONSTRAINT payment_pk PRIMARY KEY (payment_id),
 CONSTRAINT payment_currency_check CHECK (currency IN ('myr', 'sgd', 'usd')),
