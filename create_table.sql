@@ -110,15 +110,15 @@ END;
 -- 3. Customer --
 -----------------
 CREATE TABLE Customer (
-	cust_id 		  NUMBER, -- PK
-	name			    VARCHAR2(40)	NOT NULL,
-	ic				    VARCHAR2(12)	NOT NULL,
-	dob				    DATE,
-	phone			    VARCHAR2(13)	NOT NULL,
-	email			    VARCHAR2(45)	NOT NULL,
-	created_at		VARCHAR2(10)	NOT NULL,
-	updated_at		VARCHAR2(10)	NOT NULL,
-	address_id		NUMBER	NOT NULL, -- FK
+	cust_id 		NUMBER, -- PK
+	name			VARCHAR2(40)	NOT NULL,
+	ic				VARCHAR2(12)	NOT NULL,
+	dob				DATE,
+	phone			VARCHAR2(13)	NOT NULL,
+	email			VARCHAR2(45)	NOT NULL,
+	created_at		DATE DEFAULT SYSDATE NOT NULL,
+	updated_at		DATE DEFAULT SYSDATE NOT NULL,
+	address_id		NUMBER NOT NULL, -- FK
 CONSTRAINT customer_pk PRIMARY KEY (cust_id),
 CONSTRAINT customer_email_chk CHECK (REGEXP_LIKE(email, '^[a-zA-Z]\w+@(\S+)$')),
 CONSTRAINT customer_phone_chk CHECK (REGEXP_LIKE(phone, '^(\+?6?01)[0|1|2|3|4|6|7|8|9]-*[0-9]{7,8}$')),
@@ -234,10 +234,10 @@ END;
 -- 6. Service --
 ------------------
 CREATE TABLE Service (
-	service_id 	  VARCHAR2(6) NOT NULL,
-	type 			    CHAR(10) NOT NULL,
+	service_id 	    VARCHAR2(6) NOT NULL,
+	type 			CHAR(10) NOT NULL,
 	description 	CHAR(50) NOT NULL,
-	price 			  NUMBER(5,2) NOT NULL,
+	price 			NUMBER(5,2) NOT NULL,
 CONSTRAINT service_pk PRIMARY KEY (service_id),
 CONSTRAINT service_type_chk CHECK (type IN ('standard', 'express'))
 );
@@ -434,8 +434,8 @@ CREATE TABLE Parcel (
 	details				    VARCHAR2(50),
 	receipient_name      	VARCHAR2 NOT NULL,
 	receipient_contact   	VARCHAR2 NOT NULL,
-	created_at			    DATE NOT NULL,
-	updated_at			    DATE,
+	created_at			    DATE DEFAULT SYSDATE NOT NULL,
+	updated_at			    DATE DEFAULT SYSDATE,
 	delivery_id			    NUMBER, -- FK
 	service_id			    NUMBER, -- FK 
 	insurance_id		    NUMBER, -- FK
@@ -490,10 +490,10 @@ CREATE TABLE Tracking (
 	tracking_id		NUMBER, -- PK
 	status			VARCHAR2(10) NOT NULL,
 	remark			VARCHAR2(50),
-	created_at		DATE NOT NULL,
+	created_at		DATE DEFAULT SYSDATE NOT NULL,
 	parcel_id		NUMBER, -- FK
 CONSTRAINT tracking_pk PRIMARY KEY (tracking_id),
-CONSTRAINT tracking_status_chk CHECK (status IN ('pending', 'delivering', 'deliverd','canceled')),
+CONSTRAINT tracking_status_chk CHECK (status IN ('pending', 'delivering', 'delivered','canceled')),
 CONSTRAINT tracking_parcel_fk
            FOREIGN KEY (parcel_id)
            REFERENCES Parcel(parcel_id)
