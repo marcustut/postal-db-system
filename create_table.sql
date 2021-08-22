@@ -20,9 +20,9 @@
 -- 9. Staff
 -- 10. Vehicle
 -- 11. Delivery
--- 12. Parcel
--- 13. Tracking
--- 14. Order
+-- 12. Order
+-- 13. Parcel
+-- 14. Tracking
 
 -- Settings for Oracle 
 SET linesize 120
@@ -110,15 +110,15 @@ END;
 -- 3. Customer --
 -----------------
 CREATE TABLE Customer (
-	cust_id 		NUMBER, -- PK
-	name			VARCHAR2(40)	NOT NULL,
-	ic				VARCHAR2(12)	NOT NULL,
-	dob				DATE,
-	phone		    VARCHAR2(13)	NOT NULL,
-	email		    VARCHAR2(45)	NOT NULL,
-	created_at		VARCHAR2(10)	NOT NULL,
-	updated_at		VARCHAR2(10)	NOT NULL,
-	address_id		NUMBER	NOT NULL, -- FK
+	cust_id 		 NUMBER, -- PK
+	name			 VARCHAR2(40)	 NOT NULL,
+	ic				 VARCHAR2(12)	 NOT NULL,
+	dob				 DATE,
+	phone			 VARCHAR2(13)	 NOT NULL,
+	email			 VARCHAR2(45)	 NOT NULL,
+	created_at		 DATE DEFAULT SYSDATE NOT NULL,
+	updated_at		 DATE DEFAULT SYSDATE NOT NULL,
+	address_id		 NUMBER NOT NULL, -- FK
 CONSTRAINT customer_pk PRIMARY KEY (cust_id),
 CONSTRAINT customer_email_chk CHECK (REGEXP_LIKE(email, '^[a-zA-Z]\w+@(\S+)$')),
 CONSTRAINT customer_phone_chk CHECK (REGEXP_LIKE(phone, '^(\+?6?01)[0|1|2|3|4|6|7|8|9]-*[0-9]{7,8}$')),
@@ -234,11 +234,11 @@ END;
 -- 6. Service --
 ------------------
 CREATE TABLE Service (
-	service_id 		VARCHAR2(6) NOT NULL,
+	service_id 		NUMBER NOT NULL,
 	name 			CHAR(10) NOT NULL,
 	description 	CHAR(50) NOT NULL,
 	price 			NUMBER(5,2) NOT NULL,
-CONSTRAINT service_pk PRIMARY KEY (service_id),
+CONSTRAINT service_pk PRIMARY KEY (service_id)
 );
 
 -- This sequence is to auto increment the id.
@@ -264,7 +264,7 @@ END;
 -- 7. Insurance --
 -------------------
 CREATE TABLE Insurance (
-	insurance_id 	VARCHAR2(6) NOT NULL,
+	insurance_id 	NUMBER NOT NULL,
 	type 			VARCHAR(10) NOT NULL,
 	rate 			NUMBER(8,2) NOT NULL,
 	price 			NUMBER(5,2) NOT NULL,
@@ -295,7 +295,7 @@ END;
 -- 8. Pricing --
 -----------------
 CREATE TABLE Pricing (
-	pricing_id 		VARCHAR2(6) NOT NULL,
+	pricing_id 		NUMBER NOT NULL,
 	lowest_weight 	NUMBER(5,2) NOT NULL,
 	highest_weight 	NUMBER(5,2)	NOT NULL,
 	east_price 		NUMBER(5,2) NOT NULL,
@@ -393,7 +393,7 @@ CREATE TABLE Delivery (
 	staff_id		 NUMBER,	--PK,FK
 	vehicle_id		 NUMBER,	--PK,FK
 	delivery_date	 DATE  NOT NULL,
-CONSTRAINT delivery_delivery_pk PRIMARY KEY(delivery_id, staff_id, vehicle_id),
+CONSTRAINT delivery_delivery_pk PRIMARY KEY(delivery_id),
 CONSTRAINT delivery_delivery_staff_fk
            FOREIGN KEY (staff_id)
            REFERENCES Staff(staff_id),         
@@ -421,18 +421,52 @@ BEGIN
 END;
 /
 
+---------------
+-- 12. Order --
+---------------
+CREATE TABLE "Order" (
+    order_id        NUMBER, -- PK
+    cust_id         NUMBER, -- FK
+    payment_id      NUMBER, -- FK
+CONSTRAINT order_pk PRIMARY KEY (order_id),
+CONSTRAINT order_customer_fk
+           FOREIGN KEY (cust_id)
+           REFERENCES Customer(cust_id),
+CONSTRAINT order_payment_fk
+           FOREIGN KEY (payment_id)
+           REFERENCES Payment(payment_id)
+);
+
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE order_id_seq 
+  START WITH 12001
+  INCREMENT BY 1
+  NOCYCLE
+  CACHE 20;
+
+-- Below trigger is used to auto-increment the id with the use of sequence
+CREATE OR REPLACE TRIGGER order_id_ai_trg
+BEFORE INSERT ON "Order"
+FOR EACH ROW
+
+BEGIN
+    SELECT  order_id_seq.NEXTVAL
+    INTO    :new.order_id
+    FROM    dual;
+END;
+/	
 -----------------
--- 12. Parcel --
+-- 13. Parcel --
 -----------------
 CREATE TABLE Parcel (
 	parcel_id			    NUMBER,		--PK
-	type				    VARCHAR2(10)	NOT NULL,
+	"type"				    VARCHAR2(10)	NOT NULL,
 	weight				    NUMBER(4) NOT NULL,
 	details				    VARCHAR2(50),
-	receipient_name      	VARCHAR2 NOT NULL,
-	receipient_contact   	VARCHAR2 NOT NULL,
-	created_at			    DATE NOT NULL,
-	updated_at			    DATE,
+	receipient_name      	VARCHAR2(50) NOT NULL,
+	receipient_contact   	VARCHAR2(15) NOT NULL,
+	created_at			    DATE DEFAULT SYSDATE NOT NULL,
+	updated_at			    DATE DEFAULT SYSDATE,
 	delivery_id			    NUMBER, -- FK
 	service_id			    NUMBER, -- FK 
 	insurance_id		    NUMBER, -- FK
@@ -440,19 +474,19 @@ CREATE TABLE Parcel (
 	address_id		        NUMBER, -- FK
 	pricing_id		        NUMBER, -- FK
 CONSTRAINT parcel_pk PRIMARY KEY(parcel_id),
-CONSTRAINT parcel_type_chk CHECK (type IN ('fragile', 'flammable', 'normal')),
-CONSTRAINT parcel_taskallocation_fk
+CONSTRAINT parcel_type_chk CHECK ("type" IN ('fragile', 'flammable', 'normal')),
+CONSTRAINT parcel_delivery_fk
            FOREIGN KEY (delivery_id)
            REFERENCES Delivery(delivery_id),
 CONSTRAINT parcel_service_fk
            FOREIGN KEY (service_id)
            REFERENCES Service(service_id),
 CONSTRAINT parcel_insurance_fk
-           FOREIGN KEY (insurance_id_id)
+           FOREIGN KEY (insurance_id)
            REFERENCES Insurance(insurance_id),
 CONSTRAINT parcel_order_fk
            FOREIGN KEY (order_id)
-           REFERENCES Order(order_id),
+           REFERENCES "Order"(order_id),
 CONSTRAINT parcel_address_fk
            FOREIGN KEY (address_id)
            REFERENCES Address(address_id),
@@ -463,7 +497,7 @@ CONSTRAINT parcel_pricing_fk
 
 -- This sequence is to auto increment the id.
 CREATE SEQUENCE parcel_id_seq 
-  START WITH 12001
+  START WITH 13001
   INCREMENT BY 1
   NOCYCLE
   CACHE 20;
@@ -481,16 +515,16 @@ END;
 /
 
 ------------------
--- 13. Tracking --
+-- 14. Tracking --
 ------------------
 CREATE TABLE Tracking (
-	tracking_id		NUMBER, -- PK
-	status			VARCHAR2(10) NOT NULL,
-	remark			VARCHAR2(50),
-	created_at		DATE NOT NULL,
-	parcel_id		NUMBER, -- FK
+	tracking_id		 NUMBER, -- PK
+	status			 VARCHAR2(10) NOT NULL,
+	remark			 VARCHAR2(50),
+	created_at		 DATE DEFAULT SYSDATE NOT NULL,
+	parcel_id		 NUMBER, -- FK
 CONSTRAINT tracking_pk PRIMARY KEY (tracking_id),
-CONSTRAINT tracking_status_chk CHECK (status IN ('pending', 'delivering', 'deliverd','canceled')),
+CONSTRAINT tracking_status_chk CHECK (status IN ('pending', 'delivering', 'delivered','canceled')),
 CONSTRAINT tracking_parcel_fk
            FOREIGN KEY (parcel_id)
            REFERENCES Parcel(parcel_id)
@@ -499,7 +533,7 @@ CONSTRAINT tracking_parcel_fk
 
 -- This sequence is to auto increment the id.
 CREATE SEQUENCE tracking_id_seq 
-  START WITH 13001
+  START WITH 14001
   INCREMENT BY 1
   NOCYCLE
   CACHE 20;
@@ -516,37 +550,4 @@ BEGIN
 END;
 /	
 
----------------
--- 14. Order --
----------------
-CREATE TABLE Order (
-    order_id        NUMBER, -- PK
-    cust_id         NUMBER, -- FK
-    payment_id      NUMBER, -- FK
-CONSTRAINT order_pk PRIMARY KEY (order_id, cust_id, payment_id),
-CONSTRAINT order_customer_fk
-           FOREIGN KEY (cust_id)
-           REFERENCES Customer(cust_id)
-CONSTRAINT order_payment_fk
-           FOREIGN KEY (payment_id)
-           REFERENCES Payment(payment_id)
-);
 
--- This sequence is to auto increment the id.
-CREATE SEQUENCE order_id_seq 
-  START WITH 14001
-  INCREMENT BY 1
-  NOCYCLE
-  CACHE 20;
-
--- Below trigger is used to auto-increment the id with the use of sequence
-CREATE OR REPLACE TRIGGER order_id_ai_trg
-BEFORE INSERT ON Order
-FOR EACH ROW
-
-BEGIN
-    SELECT  order_id_seq.NEXTVAL
-    INTO    :new.order_id
-    FROM    dual;
-END;
-/	
