@@ -19,7 +19,7 @@
 -- 8. Pricing
 -- 9. Staff
 -- 10. Vehicle
--- 11. TaskAllocation
+-- 11. Delivery
 -- 12. Parcel
 -- 13. Tracking
 -- 14. Order
@@ -234,12 +234,11 @@ END;
 -- 6. Service --
 ------------------
 CREATE TABLE Service (
-	service_id 	    VARCHAR2(6) NOT NULL,
-	type 			CHAR(10) NOT NULL,
+	service_id 		VARCHAR2(6) NOT NULL,
+	name 			CHAR(10) NOT NULL,
 	description 	CHAR(50) NOT NULL,
 	price 			NUMBER(5,2) NOT NULL,
 CONSTRAINT service_pk PRIMARY KEY (service_id),
-CONSTRAINT service_type_chk CHECK (type IN ('standard', 'express'))
 );
 
 -- This sequence is to auto increment the id.
@@ -266,9 +265,9 @@ END;
 -------------------
 CREATE TABLE Insurance (
 	insurance_id 	VARCHAR2(6) NOT NULL,
-	type 			    VARCHAR(10) NOT NULL,
-	rate 			    NUMBER(8,2) NOT NULL,
-	price 			  NUMBER(5,2) NOT NULL,
+	type 			VARCHAR(10) NOT NULL,
+	rate 			NUMBER(8,2) NOT NULL,
+	price 			NUMBER(5,2) NOT NULL,
 CONSTRAINT insurance_pk PRIMARY KEY (insurance_id),
 CONSTRAINT insurance_type_check CHECK (type IN ('bronze', 'silver', 'gold', 'platinum'))
 );
@@ -297,8 +296,8 @@ END;
 -----------------
 CREATE TABLE Pricing (
 	pricing_id 		VARCHAR2(6) NOT NULL,
-	lowest_weight 	NUMBER(5) 	NOT NULL,
-	highest_weight 	NUMBER(5) 	NOT NULL,
+	lowest_weight 	NUMBER(5,2) NOT NULL,
+	highest_weight 	NUMBER(5,2)	NOT NULL,
 	east_price 		NUMBER(5,2) NOT NULL,
 	west_price 		NUMBER(5,2) NOT NULL,
 CONSTRAINT pricing_pk PRIMARY KEY (pricing_id)
@@ -386,23 +385,21 @@ BEGIN
 END;
 /
 
------------------------
--- 11. TaskAllocation --
------------------------
-CREATE TABLE TaskAllocation (
-	delivery_id		NUMBER,	--PK
-	staff_id		NUMBER,	--PK,FK
-	vehicle_id		NUMBER,	--PK,FK
-	delivery_date	DATE NOT NULL,
-CONSTRAINT taskallocation_pk PRIMARY KEY(delivery_id, staff_id, vehicle_id),
-CONSTRAINT taskallocation_staff_fk
+-------------------
+-- 11. Delivery --
+-------------------
+CREATE TABLE Delivery (
+	delivery_id		 NUMBER,	--PK
+	staff_id		 NUMBER,	--PK,FK
+	vehicle_id		 NUMBER,	--PK,FK
+	delivery_date	 DATE  NOT NULL,
+CONSTRAINT delivery_delivery_pk PRIMARY KEY(delivery_id, staff_id, vehicle_id),
+CONSTRAINT delivery_delivery_staff_fk
            FOREIGN KEY (staff_id)
-           REFERENCES Staff(staff_id)
-           ON DELETE CASCADE -- If the staff is deleted, this record is deleted as well
-CONSTRAINT taskallocation_vehicle_fk
+           REFERENCES Staff(staff_id),         
+CONSTRAINT delivery_delivery_vehicle_fk
            FOREIGN KEY (vehicle_id)
-           REFERENCES Vehicle(vehicle_id)
-           ON DELETE CASCADE -- If the vehicle is deleted, this record is deleted as well		   
+           REFERENCES Vehicle(vehicle_id)	   
 );
 
 -- This sequence is to auto increment the id.
@@ -414,7 +411,7 @@ CREATE SEQUENCE delivery_id_seq
 
 -- Below trigger is used to auto-increment the id with the use of sequence
 CREATE OR REPLACE TRIGGER delivery_id_ai_trg
-BEFORE INSERT ON TaskAllocation
+BEFORE INSERT ON Delivery
 FOR EACH ROW
 
 BEGIN
@@ -446,7 +443,7 @@ CONSTRAINT parcel_pk PRIMARY KEY(parcel_id),
 CONSTRAINT parcel_type_chk CHECK (type IN ('fragile', 'flammable', 'normal')),
 CONSTRAINT parcel_taskallocation_fk
            FOREIGN KEY (delivery_id)
-           REFERENCES TaskAllocation(delivery_id),
+           REFERENCES Delivery(delivery_id),
 CONSTRAINT parcel_service_fk
            FOREIGN KEY (service_id)
            REFERENCES Service(service_id),
