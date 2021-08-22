@@ -24,7 +24,6 @@
 -- 13. Parcel
 -- 14. Tracking
 
-
 -- Settings for Oracle 
 SET linesize 120
 SET pagesize 100
