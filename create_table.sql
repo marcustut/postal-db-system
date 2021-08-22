@@ -331,7 +331,7 @@ CREATE TABLE Staff (
 	staff_name		 VARCHAR2(40)	 NOT NULL,
 	email 			 VARCHAR2(45) 	 NOT NULL,
 	phone			 VARCHAR2(13)	 NOT NULL,
-	branch 			 VARCHAR2(20)	 NOT NULL,
+	branch 			 VARCHAR2(30)	 NOT NULL,
 CONSTRAINT staff_pk PRIMARY KEY (staff_id),
 CONSTRAINT staff_email_chk CHECK (REGEXP_LIKE(email, '^[a-zA-Z]\w+@(\S+)$')),
 CONSTRAINT staff_phone_chk CHECK (REGEXP_LIKE(phone, '^(\+?6?01)[0|1|2|3|4|6|7|8|9]-*[0-9]{7,8}$'))
@@ -364,7 +364,7 @@ CREATE TABLE Vehicle (
 	car_plate_no			 VARCHAR2(7)	 NOT NULL,
 	transportation_type 	 VARCHAR2(10) 	 NOT NULL,	
 CONSTRAINT vehicle_pk PRIMARY KEY (vehicle_id),
-CONSTRAINT vehicle_transportation_type_chk CHECK (transportation_type IN ('motorcycle', 'van', 'car'))
+CONSTRAINT vehicle_transportation_type_chk CHECK (transportation_type IN ('Motorcycle', 'Van', 'Car'))
 );
 
 -- This sequence is to auto increment the id.
