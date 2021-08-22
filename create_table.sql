@@ -22,6 +22,7 @@
 -- 11. TaskAllocation
 -- 12. Parcel
 -- 13. Tracking
+-- 14. Order
 
 -- Settings for Oracle 
 SET linesize 120
@@ -486,7 +487,7 @@ END;
 -- 13. Tracking --
 ------------------
 CREATE TABLE Tracking (
-	tracking_id		NUMBER, --PK
+	tracking_id		NUMBER, -- PK
 	status			VARCHAR2(10) NOT NULL,
 	remark			VARCHAR2(50),
 	created_at		DATE NOT NULL,
@@ -514,6 +515,41 @@ FOR EACH ROW
 BEGIN
     SELECT  tracking_id_seq.NEXTVAL
     INTO    :new.tracking_id
+    FROM    dual;
+END;
+/	
+
+---------------
+-- 14. Order --
+---------------
+CREATE TABLE Order (
+    order_id        NUMBER, -- PK
+    cust_id         NUMBER, -- FK
+    payment_id      NUMBER, -- FK
+CONSTRAINT order_pk PRIMARY KEY (order_id, cust_id, payment_id),
+CONSTRAINT order_customer_fk
+           FOREIGN KEY (cust_id)
+           REFERENCES Customer(cust_id)
+CONSTRAINT order_payment_fk
+           FOREIGN KEY (payment_id)
+           REFERENCES Payment(payment_id)
+);
+
+-- This sequence is to auto increment the id.
+CREATE SEQUENCE order_id_seq 
+  START WITH 14001
+  INCREMENT BY 1
+  NOCYCLE
+  CACHE 20;
+
+-- Below trigger is used to auto-increment the id with the use of sequence
+CREATE OR REPLACE TRIGGER order_id_ai_trg
+BEFORE INSERT ON Order
+FOR EACH ROW
+
+BEGIN
+    SELECT  order_id_seq.NEXTVAL
+    INTO    :new.order_id
     FROM    dual;
 END;
 /	
