@@ -110,12 +110,12 @@ END;
 -- 3. Customer --
 -----------------
 CREATE TABLE Customer (
-	cust_id 		  NUMBER, -- PK
-	name			    VARCHAR2(40)	NOT NULL,
-	ic				    VARCHAR2(12)	NOT NULL,
-	dob				    DATE,
-	phone			    VARCHAR2(13)	NOT NULL,
-	email			    VARCHAR2(45)	NOT NULL,
+	cust_id 		NUMBER, -- PK
+	name			VARCHAR2(40)	NOT NULL,
+	ic				VARCHAR2(12)	NOT NULL,
+	dob				DATE,
+	phone		    VARCHAR2(13)	NOT NULL,
+	email		    VARCHAR2(45)	NOT NULL,
 	created_at		VARCHAR2(10)	NOT NULL,
 	updated_at		VARCHAR2(10)	NOT NULL,
 	address_id		NUMBER	NOT NULL, -- FK
@@ -296,8 +296,8 @@ END;
 -----------------
 CREATE TABLE Pricing (
 	pricing_id 		VARCHAR2(6) NOT NULL,
-	lowest_weight 	NUMBER(5) 	NOT NULL,
-	highest_weight 	NUMBER(5) 	NOT NULL,
+	lowest_weight 	NUMBER(5,2) NOT NULL,
+	highest_weight 	NUMBER(5,2)	NOT NULL,
 	east_price 		NUMBER(5,2) NOT NULL,
 	west_price 		NUMBER(5,2) NOT NULL,
 CONSTRAINT pricing_pk PRIMARY KEY (pricing_id)
