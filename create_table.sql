@@ -234,12 +234,11 @@ END;
 -- 6. Service --
 ------------------
 CREATE TABLE Service (
-	service_id 	  VARCHAR2(6) NOT NULL,
-	type 			    CHAR(10) NOT NULL,
+	service_id 		VARCHAR2(6) NOT NULL,
+	name 			CHAR(10) NOT NULL,
 	description 	CHAR(50) NOT NULL,
-	price 			  NUMBER(5,2) NOT NULL,
+	price 			NUMBER(5,2) NOT NULL,
 CONSTRAINT service_pk PRIMARY KEY (service_id),
-CONSTRAINT service_type_chk CHECK (type IN ('standard', 'express'))
 );
 
 -- This sequence is to auto increment the id.
