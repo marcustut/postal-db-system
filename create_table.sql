@@ -239,14 +239,14 @@ END;
 -----------------
 CREATE TABLE "Customer" (
 	cust_id 		 NUMBER, -- PK
-	name			 VARCHAR2(40)	 NOT NULL,
-	ic				 VARCHAR2(12)	 NOT NULL,
-	dob				 DATE,
-	phone			 VARCHAR2(13)	 NOT NULL,
-	email			 VARCHAR2(45)	 NOT NULL,
-	created_at		 DATE DEFAULT SYSDATE NOT NULL,
-	updated_at		 DATE DEFAULT SYSDATE NOT NULL,
-	address_id		 NUMBER NOT NULL, -- FK
+	name         VARCHAR2(40)	 NOT NULL,
+	ic           VARCHAR2(12)	 NOT NULL,
+	dob          DATE,
+	phone        VARCHAR2(13)	 NOT NULL,
+	email        VARCHAR2(45)	 NOT NULL,
+	created_at	 DATE DEFAULT SYSDATE NOT NULL,
+	updated_at	 DATE DEFAULT SYSDATE NOT NULL,
+	address_id	 NUMBER NOT NULL, -- FK
 CONSTRAINT customer_pk PRIMARY KEY (cust_id),
 CONSTRAINT customer_email_chk CHECK (REGEXP_LIKE(email, '^[a-zA-Z]\w+@(\S+)$')),
 CONSTRAINT customer_phone_chk CHECK (REGEXP_LIKE(phone, '^(\+?6?01)[0|1|2|3|4|6|7|8|9]-*[0-9]{7,8}$')),
@@ -361,9 +361,9 @@ END;
 ------------------
 CREATE TABLE "Service" (
 	service_id 		NUMBER NOT NULL,
-	name 			CHAR(10) NOT NULL,
-	description 	CHAR(50) NOT NULL,
-	price 			NUMBER(5,2) NOT NULL,
+	name 			    VARCHAR2(10) NOT NULL,
+	description 	VARCHAR2(255) NOT NULL,
+	price 			  NUMBER(5,2) NOT NULL,
 CONSTRAINT service_pk PRIMARY KEY (service_id)
 );
 
@@ -391,9 +391,9 @@ END;
 -------------------
 CREATE TABLE "Insurance" (
 	insurance_id 	NUMBER NOT NULL,
-	type 			VARCHAR(10) NOT NULL,
-	rate 			NUMBER(8,2) NOT NULL,
-	price 			NUMBER(5,2) NOT NULL,
+	type 			    VARCHAR2(10) NOT NULL,
+	rate 			    NUMBER(8,2) NOT NULL,
+	price 			  NUMBER(5,2) NOT NULL,
 CONSTRAINT insurance_pk PRIMARY KEY (insurance_id),
 CONSTRAINT insurance_type_check CHECK (type IN ('bronze', 'silver', 'gold', 'platinum'))
 );
@@ -421,11 +421,11 @@ END;
 -- 8. Pricing --
 -----------------
 CREATE TABLE "Pricing" (
-	pricing_id 		NUMBER NOT NULL,
+	pricing_id 		  NUMBER NOT NULL,
 	lowest_weight 	NUMBER(5,2) NOT NULL,
 	highest_weight 	NUMBER(5,2)	NOT NULL,
-	east_price 		NUMBER(5,2) NOT NULL,
-	west_price 		NUMBER(5,2) NOT NULL,
+	east_price 		  NUMBER(5,2) NOT NULL,
+	west_price 		  NUMBER(5,2) NOT NULL,
 CONSTRAINT pricing_pk PRIMARY KEY (pricing_id)
 );
 
@@ -585,22 +585,22 @@ END;
 -- 13. Parcel --
 -----------------
 CREATE TABLE "Parcel" (
-	parcel_id			    NUMBER,		--PK
-	"type"				    VARCHAR2(10)	NOT NULL,
-	weight				    NUMBER(4) NOT NULL,
-	details				    VARCHAR2(50),
-	receipient_name      	VARCHAR2(50) NOT NULL,
-	receipient_contact   	VARCHAR2(15) NOT NULL,
-	created_at			    DATE DEFAULT SYSDATE NOT NULL,
-	updated_at			    DATE DEFAULT SYSDATE,
-	delivery_id			    NUMBER, -- FK
-	service_id			    NUMBER, -- FK 
-	insurance_id		    NUMBER, -- FK
-	order_id  		       	NUMBER, -- FK
-	address_id		        NUMBER, -- FK
-	pricing_id		        NUMBER, -- FK
+	parcel_id			       NUMBER,		--PK
+	type				         VARCHAR2(10)	NOT NULL,
+	weight				       NUMBER(4) NOT NULL,
+	details				       VARCHAR2(255),
+	receipient_name    	 VARCHAR2(50) NOT NULL,
+	receipient_contact   VARCHAR2(15) NOT NULL,
+	created_at			     DATE DEFAULT SYSDATE NOT NULL,
+	updated_at			     DATE DEFAULT SYSDATE,
+	delivery_id			     NUMBER, -- FK
+	service_id			     NUMBER, -- FK 
+	insurance_id		     NUMBER, -- FK
+	order_id  		       NUMBER, -- FK
+	address_id		       NUMBER, -- FK
+	pricing_id		       NUMBER, -- FK
 CONSTRAINT parcel_pk PRIMARY KEY(parcel_id),
-CONSTRAINT parcel_type_chk CHECK ("type" IN ('fragile', 'flammable', 'normal')),
+CONSTRAINT parcel_type_chk CHECK (type IN ('fragile', 'flammable', 'normal')),
 CONSTRAINT parcel_delivery_fk
            FOREIGN KEY (delivery_id)
            REFERENCES "Delivery"(delivery_id),
@@ -645,12 +645,12 @@ END;
 ------------------
 CREATE TABLE "Tracking" (
 	tracking_id		 NUMBER, -- PK
-	status			 VARCHAR2(10) NOT NULL,
-	remark			 VARCHAR2(50),
+	status			   VARCHAR2(10) NOT NULL,
+	remark			   VARCHAR2(255),
 	created_at		 DATE DEFAULT SYSDATE NOT NULL,
-	parcel_id		 NUMBER, -- FK
+	parcel_id		   NUMBER, -- FK
 CONSTRAINT tracking_pk PRIMARY KEY (tracking_id),
-CONSTRAINT tracking_status_chk CHECK (status IN ('pending', 'delivering', 'delivered','canceled')),
+CONSTRAINT tracking_status_chk CHECK (status IN ('pending', 'delivering', 'delivered', 'canceled')),
 CONSTRAINT tracking_parcel_fk
            FOREIGN KEY (parcel_id)
            REFERENCES "Parcel"(parcel_id)
