@@ -6,9 +6,7 @@
 -- Description  : This database is used for carrying out Online Postal Delivery. 
 --------------------------------------------------------------------------------------
 
--- NOTE: Do not run this file, it has not been tested yet
-
--- This file creates the tables for the payment persective of the system:
+-- This file creates the tables for the system:
 -- 1. Address
 -- 2. Card
 -- 3. Customer
