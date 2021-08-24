@@ -1,4 +1,3 @@
-
 -- Author: Marcus Lee Kai Yang
 
 -- Oracle settings
