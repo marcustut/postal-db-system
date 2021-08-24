@@ -554,6 +554,7 @@ CREATE TABLE "Order" (
     order_id        NUMBER, -- PK
     cust_id         NUMBER, -- FK
     payment_id      NUMBER, -- FK
+    created_at			DATE DEFAULT SYSDATE NOT NULL,
 CONSTRAINT order_pk PRIMARY KEY (order_id),
 CONSTRAINT order_customer_fk
            FOREIGN KEY (cust_id)
