@@ -15,6 +15,7 @@ cl scr
 PROMPT This query is for customer to check orders between the start and end date 
 PROMPT to find out the payment amount, parcel details and tracking status.
 PROMPT
+PROMPT Example Customer ID: 3042
 PROMPT Example Start/End Date: 01/01/2019
 PROMPT
 
@@ -67,9 +68,3 @@ WHERE A.parcel_id = B.parcel_id
   AND A.created_at = B."tracking_update_date"
   AND A.created_at BETWEEN TO_DATE('&v_start_date', 'DD/MM/YYYY') AND TO_DATE('&v_end_date', 'DD/MM/YYYY')
 ORDER BY B.order_id, A.created_at DESC;
-
-
--- Example usage:
--- 3042
--- 01/01/2019
--- 01/01/2020 -> 2021 -> 2022
