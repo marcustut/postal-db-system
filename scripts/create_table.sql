@@ -554,14 +554,21 @@ CREATE TABLE "Order" (
     order_id        NUMBER, -- PK
     cust_id         NUMBER, -- FK
     payment_id      NUMBER, -- FK
+    insurance_id    NUMBER, -- FK
+    insurance_claim CHAR(1) DEFAULT 'N' NOT NULL,
     created_at			DATE DEFAULT SYSDATE NOT NULL,
 CONSTRAINT order_pk PRIMARY KEY (order_id),
+CONSTRAINT order_insurance_claim_boolean
+           CHECK (insurance_claim IN ('Y', 'N')),
 CONSTRAINT order_customer_fk
            FOREIGN KEY (cust_id)
            REFERENCES "Customer"(cust_id),
 CONSTRAINT order_payment_fk
            FOREIGN KEY (payment_id)
-           REFERENCES "Payment"(payment_id)
+           REFERENCES "Payment"(payment_id),
+CONSTRAINT order_insurance_fk
+           FOREIGN KEY (insurance_id)
+           REFERENCES "Insurance"(insurance_id)
 );
 
 -- This sequence is to auto increment the id.
@@ -596,7 +603,6 @@ CREATE TABLE "Parcel" (
 	updated_at			     DATE DEFAULT SYSDATE,
 	delivery_id			     NUMBER, -- FK
 	service_id			     NUMBER, -- FK 
-	insurance_id		     NUMBER, -- FK
 	order_id  		       NUMBER, -- FK
 	address_id		       NUMBER, -- FK
 	pricing_id		       NUMBER, -- FK
@@ -608,9 +614,6 @@ CONSTRAINT parcel_delivery_fk
 CONSTRAINT parcel_service_fk
            FOREIGN KEY (service_id)
            REFERENCES "Service"(service_id),
-CONSTRAINT parcel_insurance_fk
-           FOREIGN KEY (insurance_id)
-           REFERENCES "Insurance"(insurance_id),
 CONSTRAINT parcel_order_fk
            FOREIGN KEY (order_id)
            REFERENCES "Order"(order_id),
