@@ -5,6 +5,12 @@ SET LINESIZE 120
 SET PAGESIZE 100
 ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MM/YYYY';
 SET TERMOUT ON
+SET VERIFY OFF
+
+-- Clear screen
+cl scr
+
+TTITLE CENTER 'Staff Branch Timetable Search' SKIP 2
 
 COLUMN state FORMAT A20 HEADING 'State';
 COLUMN staff_id FORMAT 99999 HEADING 'Staff Id';
@@ -24,3 +30,8 @@ WHERE S.staff_id = D.staff_id AND D.delivery_id = P.delivery_id AND A.address_id
 GROUP BY A.state, S.staff_id, S.staff_name, D.delivery_date
 Order By S.staff_id;
 CLEAR COLUMN COLUMNS
+TTITLE OFF
+
+--Example: 
+--State: Kuala Lumpur
+--d_date: 25/02/2020
