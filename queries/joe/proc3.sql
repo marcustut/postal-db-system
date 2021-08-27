@@ -12,6 +12,15 @@ v_address_id "Address".address_id%TYPE;
 v_state "Address".state%TYPE;
 
 BEGIN 
+	IF (vState NOT IN('Johor','Kedah','Kelantan','Malacca','Negeri Sembilan','Pahang','Penang','Perak','Perlis','Sabah','Sarawak','Selangor',
+	'Terengganu','W.P. Kuala Lumpur', 'W.P. Labuan', 'W.P. Putrajaya')) THEN
+		RAISE_APPLICATION_ERROR(-20101,'[FAILED] State Error');
+	ELSIF (LENGTH(vPostCode) != 5) THEN
+		RAISE_APPLICATION_ERROR(-20102,'[FAILED] Post Code Error');
+	ELSIF (LENGTH(vLine1) < 5) THEN
+		RAISE_APPLICATION_ERROR(-20103,'[FAILED] Address Line Error');
+	END IF;
+
 	INSERT INTO "Address"(country, state, city, line1, line2, postal_code)
 	VALUES(vCountry, vState, vCity, vLine1, vLine2, vPostCode)RETURNING address_id INTO v_address_id;
 	
@@ -22,15 +31,6 @@ BEGIN
 
 	IF (SQL%NOTFOUND) THEN
 		RAISE_APPLICATION_ERROR(-20100, '[ALERT]!');
-	END IF;
-
-	IF (vState NOT IN('Johor','Kedah','Kelantan','Malacca','Negeri Sembilan','Pahang','Penang','Perak','Perlis','Sabah','Sarawak','Selangor',
-	'Terengganu','W.P. Kuala Lumpur', 'W.P. Labuan', 'W.P. Putrajaya')) THEN
-		RAISE_APPLICATION_ERROR(-20101,'[FAILED] State Error');
-	ELSIF (vPostCode > 5) THEN
-		RAISE_APPLICATION_ERROR(-20102,'[FAILED] Post Code Error');
-	ELSIF (LENGTH(vLine1) < 5) THEN
-		RAISE_APPLICATION_ERROR(-20103,'[FAILED] Address Line Error');
 	END IF;
 	
 	DBMS_OUTPUT.PUT_LINE('Successfully added address to '|| vCustID || ' customer.');

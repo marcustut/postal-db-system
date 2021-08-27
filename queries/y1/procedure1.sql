@@ -90,7 +90,7 @@ BEGIN
         FROM "Insurance"
         WHERE insurance_id = IN_insuranceID;
     ELSE 
-    i_price := 0;
+        i_price := 0;
     END IF;
     total_amount := d_price + s_price + i_price;
     p_tax := total_amount*11/100;
