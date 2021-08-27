@@ -452,11 +452,11 @@ END;
 --- 9. Staff ---
 -----------------
 CREATE TABLE "Staff" (
-	staff_id		 NUMBER, -- PK
+	staff_id		   NUMBER, -- PK
 	staff_name		 VARCHAR2(40)	 NOT NULL,
-	email 			 VARCHAR2(45) 	 NOT NULL,
-	phone			 VARCHAR2(13)	 NOT NULL,
-	branch 			 VARCHAR2(30)	 NOT NULL,
+	email 			   VARCHAR2(45)  NOT NULL,
+	phone			     VARCHAR2(13)	 NOT NULL,
+	branch 			   VARCHAR2(30)	 NOT NULL,
 CONSTRAINT staff_pk PRIMARY KEY (staff_id),
 CONSTRAINT staff_email_chk CHECK (REGEXP_LIKE(email, '^[a-zA-Z]\w+@(\S+)$')),
 CONSTRAINT staff_phone_chk CHECK (REGEXP_LIKE(phone, '^(\+?6?01)[0|1|2|3|4|6|7|8|9]-*[0-9]{7,8}$'))
@@ -516,7 +516,7 @@ END;
 -------------------
 CREATE TABLE "Delivery" (
 	delivery_id		 NUMBER,	--PK
-	staff_id		 NUMBER,	--PK,FK
+	staff_id		   NUMBER,	--PK,FK
 	vehicle_id		 NUMBER,	--PK,FK
 	delivery_date	 DATE  NOT NULL,
 CONSTRAINT delivery_delivery_pk PRIMARY KEY(delivery_id),
