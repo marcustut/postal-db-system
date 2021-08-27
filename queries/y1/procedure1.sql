@@ -101,7 +101,8 @@ BEGIN
     INSERT INTO "Order" (cust_id, payment_id, insurance_id, insurance_claim, created_at) 
     VALUES (IN_custId, p_id, IN_insuranceID,'N', o_date) returning order_id INTO o_id;
 
-    UPDATE "Parcel" SET order_id = o_id WHERE parcel_id = IN_parcelID;
+    UPDATE "Parcel" SET order_id = o_id,updated_at = sysdate WHERE parcel_id = IN_parcelID;
+    
     
 
     DBMS_OUTPUT.PUT_LINE('------ORDER DETAILS-------');
@@ -137,9 +138,10 @@ CREATE OR REPLACE TRIGGER TRG_UPDATE_PARCEL_DATE
 AFTER UPDATE OF order_id
 ON "Parcel"
 FOR EACH ROW
-
+WHEN (new.updated_at != sysdate)
 BEGIN 
 UPDATE "Parcel" SET updated_at = sysdate WHERE parcel_id = :old.parcel_ID;
+
 
 END;
 /
