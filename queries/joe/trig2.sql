@@ -1,3 +1,5 @@
+--Author: Tang Xiao Zu
+
 CREATE OR REPLACE TRIGGER TRG_CHECK_CUS_AGE
 BEFORE INSERT ON "Customer"
 FOR EACH ROW
@@ -16,3 +18,4 @@ BEGIN
 	
 END;
 /
+
