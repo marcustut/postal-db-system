@@ -16,7 +16,7 @@ COLUMN state FORMAT A20 HEADING 'State';
 COLUMN staff_id FORMAT 99999 HEADING 'Staff Id';
 COLUMN staff_name FORMAT A30 HEADING 'Staff Name';
 COLUMN delivery_date FORMAT A15 HEADING 'Delivery Date';
-COLUMN total_parcel FORMAT 99999 HEADING 'Parcel Id';
+COLUMN total_parcel FORMAT 99999 HEADING 'Parcel';
 
 PROMPT Delivery Information
 ACCEPT a_state PROMPT 'Enter a State in Malaysia: '
