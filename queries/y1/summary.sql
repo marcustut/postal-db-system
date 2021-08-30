@@ -1,8 +1,8 @@
 --Author: Wong Wai Yi
 
 SET TERMOUT OFF 
-SET LINESIZE 120
-SET PAGESIZE 100
+SET LINESIZE 200
+SET PAGESIZE 200
 ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MM/YYYY';
 SET TERMOUT ON
 SET VERIFY OFF
@@ -13,6 +13,7 @@ CREATE OR REPLACE VIEW insurance_claim_view as
     FROM "Order"
     WHERE insurance_claim= 'Y' AND EXTRACT(YEAR FROM created_at) = 2019
     GROUP BY insurance_id;
+
 CREATE OR REPLACE PROCEDURE RPT_INSURANCE(IN_YEAR IN number) IS 
 i_ins_percent number;
 i_total_percent number:=0;
