@@ -28,11 +28,24 @@ PROMPT
 ACCEPT s_year NUMBER PROMPT 'Enter a Year: ';
 ACCEPT s_status PROMPT 'Enter a status: '; 
 
-SELECT state, status, count(p.parcel_id) AS total_parcel, ((count(p.parcel_id))/ (select count(p.parcel_id) AS total_parcel 
-FROM "Tracking" t, "Parcel" p, "Address" a
-WHERE t.parcel_id = p.parcel_id AND a.address_id = p.address_id AND extract(year FROM t.created_at) = '&s_year')*100) AS Percentage
+SELECT 
+  state, 
+  status, 
+  count(p.parcel_id) AS total_parcel, 
+  (
+    (count(p.parcel_id)) / (
+      SELECT count(p.parcel_id) AS total_parcel 
+      FROM "Tracking" t, "Parcel" p
+      WHERE t.parcel_id = p.parcel_id 
+        AND extract(year FROM t.created_at) = '&s_year'
+        AND t.status = '&s_status'
+    ) * 100
+  ) AS Percentage
 FROM "Parcel" p, "Address" a, "Tracking" t
-WHERE p.address_id = a.address_id AND p.parcel_id = t.parcel_id AND t.status = '&s_status' AND extract(year FROM t.created_at) = '&s_year'
+WHERE p.address_id = a.address_id 
+  AND p.parcel_id = t.parcel_id 
+  AND t.status = '&s_status' 
+  AND extract(year FROM t.created_at) = '&s_year'
 GROUP BY state, status, extract(year FROM t.created_at)
 ORDER BY state;
 
