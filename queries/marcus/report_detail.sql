@@ -11,11 +11,7 @@ SET VERIFY OFF
 -- Clear screen
 cl scr
 
--- Description of query
-PROMPT This is a summary report of how many parcels are cancelled and delivered
-PROMPT from 01/01/2019 until now
-PROMPT
-
+-- Report (Detail): Compare parcels delivered and canceled for each year
 CREATE OR REPLACE PROCEDURE rpt_parcels IS
   -- Define error code
   ERR_CODE_FETCH_TOTAL_FAILED CONSTANT NUMBER := -20065;
@@ -70,9 +66,6 @@ CREATE OR REPLACE PROCEDURE rpt_parcels IS
   v_total NUMBER;
   v_total_canceled NUMBER;
   v_total_delivered NUMBER;
-
-  v_percentage_total_canceled NUMBER;
-  v_percentage_total_delivered NUMBER;
 BEGIN
   -- Printing the header
   DBMS_OUTPUT.PUT_LINE(RPAD('=', 63, '='));
@@ -113,27 +106,25 @@ BEGIN
     FOR branch_parcel IN branch_parcels_cursor(year_rec.Year) LOOP
       DBMS_OUTPUT.PUT_LINE('| ' || RPAD(branch_parcel."State", 20, ' ') || ' | ' 
                            || LPAD(branch_parcel."Canceled" || ' (' 
-                           || LPAD(TO_CHAR(branch_parcel."Canceled" / v_total_canceled * 100, 'FM990.90'), 5, ' ') 
+                           || LPAD(func_percentage(branch_parcel."Canceled", v_total_canceled), 5, ' ') 
                            || '%)', 16, ' ') || ' | ' || LPAD(branch_parcel."Delivered" || ' (' 
-                           || LPAD(TO_CHAR(branch_parcel."Delivered" / v_total_delivered * 100, 'FM990.90'), 5, ' ') 
+                           || LPAD(func_percentage(branch_parcel."Delivered", v_total_delivered), 5, ' ') 
                            || '%)', 17, ' ') || ' |');
     END LOOP;
 
     v_total := v_total_canceled + v_total_delivered;
-    v_percentage_total_canceled := v_total_canceled / v_total * 100;
-    v_percentage_total_delivered := v_total_delivered / v_total * 100;
 
     -- Print the total
     DBMS_OUTPUT.PUT_LINE(RPAD('-', 63, '-'));
     DBMS_OUTPUT.PUT_LINE('| ' || LPAD('TOTAL', 20, ' ') || ' | ' || LPAD(v_total_canceled || ' (' 
-                         || LPAD(TO_CHAR(v_percentage_total_canceled, 'FM990.90'), 6, ' ') 
+                         || LPAD(func_percentage(v_total_canceled, v_total), 6, ' ') 
                          || '%)', 16, ' ') || ' | ' || LPAD(v_total_delivered || ' (' 
-                         || LPAD(TO_CHAR(v_percentage_total_delivered, 'FM990.90'), 6, ' ') 
+                         || LPAD(func_percentage(v_total_delivered, v_total), 6, ' ') 
                          || '%)', 17, ' ') || ' |');
     DBMS_OUTPUT.PUT_LINE(RPAD('-', 63, '-'));
 
-    DBMS_OUTPUT.PUT_LINE(CHR(10) || TO_CHAR(v_percentage_total_canceled, 'FM990.90') 
-                         || '% parcels is canceled and ' || TO_CHAR(v_percentage_total_delivered, 'FM990.90')
+    DBMS_OUTPUT.PUT_LINE(CHR(10) || func_percentage(v_total_canceled, v_total) 
+                         || '% parcels is canceled and ' || func_percentage(v_total_delivered, v_total)
                          || '% parcels is delivered in ' || year_rec.Year || '.' || CHR(10));
   END LOOP;
 

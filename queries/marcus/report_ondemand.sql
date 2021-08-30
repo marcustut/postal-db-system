@@ -11,6 +11,7 @@ SET VERIFY OFF
 -- Clear screen
 cl scr
 
+-- Report (On demand): Show top customers give year and quantity
 CREATE OR REPLACE PROCEDURE rpt_top_customers(in_year IN NUMBER, in_top IN NUMBER) IS
   -- Define error code
   ERR_CODE_CUSTOMER_NOT_FOUND CONSTANT NUMBER := -20020;

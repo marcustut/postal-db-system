@@ -12,6 +12,7 @@ SET VERIFY OFF
 -- Clear screen
 cl scr
 
+-- Report (Summary): Summary of earnings of all branch in a given year
 CREATE OR REPLACE PROCEDURE rpt_earnings(in_year IN NUMBER) IS 
   -- Define error code
   ERR_CODE_EARNING_NOT_FOUND CONSTANT NUMBER := -20021;
@@ -54,12 +55,6 @@ CREATE OR REPLACE PROCEDURE rpt_earnings(in_year IN NUMBER) IS
   v_total_tax NUMBER := 0;
   v_total_loss NUMBER := 0;
   v_total_profit NUMBER := 0;
-
-  -- Variables for calculating percentage
-  v_percentage_total_sales NUMBER := 0;
-  v_percentage_total_tax NUMBER := 0;
-  v_percentage_total_loss NUMBER := 0;
-  v_percentage_total_profit NUMBER := 0;
 BEGIN
   -- Print the title
   DBMS_OUTPUT.PUT_LINE(RPAD('=', 84, '='));
@@ -113,12 +108,6 @@ BEGIN
   -- Close the cursor
   CLOSE earnings_cursor;
 
-  -- Calculate the percentage
-  v_percentage_total_sales := (v_total_sales / v_total_sales) * 100;
-  v_percentage_total_tax := (v_total_tax / v_total_sales) * 100;
-  v_percentage_total_loss := (v_total_loss / v_total_sales) * 100;
-  v_percentage_total_profit := (v_total_profit / v_total_sales) * 100;
-
   -- Print the total
   DBMS_OUTPUT.PUT_LINE(RPAD('-', 84, '-'));
   DBMS_OUTPUT.PUT_LINE('| ' || LPAD('TOTAL', 9, ' ') || ' | ' 
@@ -130,20 +119,20 @@ BEGIN
   -- Print the percentage
   DBMS_OUTPUT.PUT_LINE(RPAD('-', 84, '-'));
   DBMS_OUTPUT.PUT_LINE('| ' || LPAD('SUMMARY IN PERCENTAGE', 28, ' ') || ' | ' 
-                       || LPAD(TO_CHAR(v_percentage_total_sales, 'FM999.90') || '%', 11, ' ') 
-                       || ' | ' || LPAD(TO_CHAR(v_percentage_total_tax, 'FM999.90') || '%', 9, ' ')
-                       || ' | ' || LPAD(TO_CHAR(v_percentage_total_loss, 'FM999.90') || '%', 9, ' ')
-                       || ' | ' || LPAD(TO_CHAR(v_percentage_total_profit, 'FM999.90') || '%', 11, ' ')
+                       || LPAD(func_percentage(v_total_sales, v_total_sales), 11, ' ') 
+                       || ' | ' || LPAD(func_percentage(v_total_tax, v_total_sales), 9, ' ')
+                       || ' | ' || LPAD(func_percentage(v_total_loss, v_total_sales), 9, ' ')
+                       || ' | ' || LPAD(func_percentage(v_total_profit, v_total_sales), 11, ' ')
                        || ' |');
   DBMS_OUTPUT.PUT_LINE(RPAD('-', 84, '-'));
 
   -- Print the summary
   DBMS_OUTPUT.PUT_LINE(CHR(10) || '[NOTE] Percentage is calculated assuming sales is the divisor.' || CHR(10));
   DBMS_OUTPUT.PUT_LINE('The company made ' || 'RM ' || TO_CHAR(v_total_profit, 'FM99999.90') || ' (' 
-                       || TO_CHAR(v_percentage_total_profit, 'FM999.90') 
-                       || '%) of profit from a total sales of RM ' 
+                       || func_percentage(v_total_profit, v_total_sales) 
+                       || ') of profit from a total sales of RM ' 
                        || TO_CHAR(v_total_sales, 'FM99999.90') || ' (' 
-                       || TO_CHAR(v_percentage_total_sales, 'FM999.90') || '%) in year ' || in_year
+                       || func_percentage(v_total_sales, v_total_sales) || ') in year ' || in_year
                        || '.');
   EXCEPTION
     WHEN e_earning_not_found THEN
