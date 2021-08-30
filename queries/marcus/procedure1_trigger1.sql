@@ -44,7 +44,7 @@ CREATE SEQUENCE vehicle_id_allocation_seq
   CACHE 20
   CYCLE;
 
--- This procedure will run after a parcel's tracking status is created
+-- Procedure 1: This procedure will run after a parcel's tracking status is created
 CREATE PROCEDURE prc_assign_parcel_to_staff(in_parcel_id IN NUMBER) IS
   -- Define delivery date offset
   DELIVERY_DATE_OFFSET CONSTANT NUMBER := 3;
@@ -139,6 +139,7 @@ BEGIN
 END;
 /
 
+-- Trigger 1: This trigger will create a corresponding delivery when a new tracking is added
 CREATE TRIGGER trg_create_delivery_for_new_tracking
 AFTER INSERT ON "Tracking"
 FOR EACH ROW
