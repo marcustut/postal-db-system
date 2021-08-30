@@ -2,6 +2,7 @@
 
 CREATE OR REPLACE TRIGGER TRG_UPDATE_TRACKING_STATUS 
 AFTER UPDATE ON "Order"
+FOR EACH ROW
 
 DECLARE
     u_orderid "Order".order_id%TYPE;
@@ -13,7 +14,7 @@ BEGIN
 
     SELECT parcel_id INTO u_parcelid
     FROM "Parcel" Pa, "Order" O
-    WHERE Pa.parcel_id = O.parcel_id AND O.order_id = u_orderid;
+    WHERE Pa.order_id = O.order_id AND O.order_id = u_orderid;
 
     SELECT tracking_id INTO u_trackingid
     FROM "Tracking" Tr, "Parcel" Pa

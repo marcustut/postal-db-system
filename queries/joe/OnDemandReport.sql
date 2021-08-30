@@ -51,7 +51,7 @@ BEGIN
         FOR status_month IN MONTH_CURSOR LOOP
 
         FOR s_rec IN STATUS_DETAIL_CURSOR(status_month.s_month) LOOP
-        DBMS_OUTPUT.PUT_LINE(RPAD(status_month.s_month,10)||RPAD(s_rec.total_parcel,16)||RPAD(s_rec.type,16)||RPAD(s_rec.total_amount,20));
+        DBMS_OUTPUT.PUT_LINE(RPAD(status_month.s_month,10)||RPAD(s_rec.total_parcel,16)||RPAD(s_rec.type,16)||RPAD(TRIM(TO_CHAR(s_rec.total_amount, '999G999D90')),20));
 
         s_totalamt := s_totalamt + s_rec.total_amount;
         s_totalparcel := s_totalparcel + s_rec.total_parcel;
@@ -60,7 +60,7 @@ BEGIN
     END LOOP;
 
     DBMS_OUTPUT.PUT_LINE(LPAD('=', 60, '='));
-    DBMS_OUTPUT.PUT_LINE(RPAD('*', 3, ' ') || 'Total: ' || RPAD(s_totalparcel, 27, ' ') || RPAD(' ', 2, ' ') || 'RM ' || RPAD(TRIM(TO_CHAR(s_totalamt, '999G999D99')), 13, ' '));
+    DBMS_OUTPUT.PUT_LINE(RPAD('*', 3, ' ') || 'Total: ' || RPAD(s_totalparcel, 27, ' ') || RPAD(' ', 2, ' ') || 'RM ' || RPAD(TRIM(TO_CHAR(s_totalamt, '999G999D90')), 13, ' '));
     DBMS_OUTPUT.PUT_LINE(LPAD('=', 60, '='));
     DBMS_OUTPUT.PUT_LINE(chr(10));
 
