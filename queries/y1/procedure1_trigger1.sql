@@ -8,9 +8,6 @@ SET TERMOUT ON
 SET VERIFY OFF
 
 
-
-
-
 CREATE OR REPLACE PROCEDURE PRC_ADD_PAYMENT_METHOD(
     IN_custId IN "Customer".cust_id%type, 
     IN_methodType IN "PaymentMethod".type%type, 
