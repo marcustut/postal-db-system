@@ -50,13 +50,16 @@ BEGIN
     WHERE order_id = dOrderID AND insurance_id = v_insuranceid;
 
     IF(v_insuranceclaim = 'Y') THEN
-        RAISE_APPLICATION_ERROR(-20071, '[ERROR]Insurance already claimed! ');
+        RAISE_APPLICATION_ERROR(-20006, '[ERROR]Insurance already claimed! ');
     END IF;
 
     UPDATE "Order"
     SET insurance_claim = 'Y'
     WHERE order_id = dOrderID AND insurance_id = v_insuranceid; 
 
+    DBMS_OUTPUT.PUT_LINE('-------------------------------');
+    DBMS_OUTPUT.PUT_LINE('Insurance Successfully Updated!');
+    DBMS_OUTPUT.PUT_LINE('-------------------------------');
 
     EXCEPTION 
         WHEN E_CUSTOMER_NOT_FOUND THEN
