@@ -34,7 +34,7 @@ FROM "Staff" S, "Delivery" D, "Parcel" P, "Payment" Pm, "Order" O
 WHERE S.staff_id = D.staff_id AND D.delivery_id = P.delivery_id AND P.order_id = O.order_id AND O.payment_id = Pm.payment_id 
         AND EXTRACT(MONTH FROM D.delivery_date) = s_month AND EXTRACT(YEAR FROM D.delivery_date) = S_YEAR
 GROUP BY S.staff_id, S.staff_name, S.email, S.phone, S.branch
-ORDER BY S.staff_id; 
+ORDER BY total_parcel DESC; 
 
 BEGIN 
     SELECT COUNT(created_at) INTO recordCount

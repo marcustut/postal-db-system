@@ -3,11 +3,13 @@
 CREATE OR REPLACE TRIGGER TRG_UPDATE_TRACKING_STATUS 
 AFTER UPDATE ON "Order"
 FOR EACH ROW
+WHEN (new.insurance_claim = 'Y')
 
 DECLARE
     u_orderid "Order".order_id%TYPE;
     u_parcelid "Parcel".parcel_id%TYPE;
     u_trackingid "Tracking".tracking_id%TYPE;
+    PRAGMA AUTONOMOUS_TRANSACTION;
 
 BEGIN
 	u_orderid := :NEW.order_id; 
@@ -22,7 +24,8 @@ BEGIN
 
     UPDATE "Tracking"
     SET status = 'canceled'
-    WHERE tracking_id = u_trackingid; 
+    WHERE tracking_id = u_trackingid;
+    COMMIT;
 
 END;
 /

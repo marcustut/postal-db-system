@@ -26,7 +26,7 @@ ORDER BY branch;
 CURSOR DELIVERY_CURSOR(dev_branch IN VARCHAR2) IS
 SELECT D.delivery_date, D.staff_id, S.branch, COUNT(P.parcel_id) AS total_parcel
 FROM "Staff" S, "Delivery" D, "Parcel" P
-WHERE S.staff_id = D.staff_id AND D.delivery_id = P.delivery_id AND branch = dev_branch AND EXTRACT(YEAR FROM P.created_at) = IN_year
+WHERE S.staff_id = D.staff_id AND D.delivery_id = P.delivery_id AND branch = dev_branch AND EXTRACT(YEAR FROM D.delivery_date) = IN_year
 GROUP BY D.delivery_date, D.staff_id, S.branch
 ORDER BY D.delivery_date, total_parcel DESC;
 
