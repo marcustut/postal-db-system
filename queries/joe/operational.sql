@@ -14,7 +14,7 @@ COLUMN state FORMAT A20 HEADING 'State';
 COLUMN city FORMAT A15 HEADING 'City';
 COLUMN line1 FORMAT A30 HEADING 'Line1';
 COLUMN line2 FORMAT A30 HEADING 'Line2';
-COLUMN postal_code FORMAT A10 HEADING 'Post Code';
+COLUMN postal_code FORMAT A12 HEADING 'Post Code';
 COLUMN receipient_name FORMAT A20 HEADING 'Receipient Name';
 COLUMN receipient_contact FORMAT A20 HEADING 'Contact No';
 

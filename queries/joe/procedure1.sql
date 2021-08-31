@@ -29,7 +29,7 @@ BEGIN
 		RAISE_APPLICATION_ERROR(-20000, '[FAILED]Status Update');
 	END IF;
 	
-	IF (c_status = 'delivering' AND track_status = 'pending') THEN
+	IF (c_status = 'delivering' AND track_status IN ('pending','canceled')) THEN
 		RAISE_APPLICATION_ERROR(-20001, '[FAILED]Status delivering in ' || track_id || ' cannot update to pending!');
 	ELSIF (c_status = 'canceled' AND track_status IN('pending','delivering','delivered')) THEN
 		RAISE_APPLICATION_ERROR(-20003, '[FAILED]Status canceled in ' || track_id || ' cannot update to any other status!');
@@ -74,5 +74,4 @@ END;
 --delivered cannot go to pending, delivering, canceled
  
 
-	
 
