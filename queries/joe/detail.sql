@@ -9,7 +9,7 @@ SET VERIFY OFF
 
 CREATE OR REPLACE PROCEDURE RPT_DELIVERIES_AREAS(IN_year IN NUMBER) IS
 E_NO_RECORD_FOUND EXCEPTION;
-PRAGMA EXCEPTION_INIT(E_NO_RECORD_FOUND, -20075);
+PRAGMA EXCEPTION_INIT(E_NO_RECORD_FOUND, -20008);
 v_totalParcel NUMBER(5) := 0;
 v_grandParcel NUMBER(5) := 0;
 v_contribution NUMBER(4,2) := 0;
@@ -36,7 +36,7 @@ BEGIN
     WHERE EXTRACT(YEAR FROM created_at) = IN_year;
 
     IF (recordCount = 0) THEN
-        RAISE_APPLICATION_ERROR(-20075, 'No Record Found.', true);
+        RAISE_APPLICATION_ERROR(-20008, 'No Record Found.', true);
     ELSE
         DBMS_OUTPUT.PUT_LINE(chr(10));
         DBMS_OUTPUT.PUT_LINE(RPAD('*', 21, ' ') || RPAD('-', 20, '-'));

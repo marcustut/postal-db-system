@@ -7,11 +7,10 @@ ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MM/YYYY';
 SET TERMOUT ON
 SET VERIFY OFF
 
-CREATE OR REPLACE PROCEDURE RPT_STAFF_PERFORMANCE(S_YEAR IN NUMBER) IS
---staffid, staffname, email, phone, branch, totalparceldelivered, amountoftheparcel, percentage 
+CREATE OR REPLACE PROCEDURE RPT_STAFF_PERFORMANCE(S_YEAR IN NUMBER) IS 
 
 E_NO_RECORD_FOUND EXCEPTION;
-PRAGMA EXCEPTION_INIT(E_NO_RECORD_FOUND, -20076);
+PRAGMA EXCEPTION_INIT(E_NO_RECORD_FOUND, -20007);
 dev_month "Delivery".delivery_date%TYPE;
 v_totalParcel NUMBER(5) := 0;
 v_totalAmt NUMBER(10,2) := 0;
@@ -43,7 +42,7 @@ BEGIN
     WHERE EXTRACT(YEAR FROM created_at) = S_YEAR;
 
     IF (recordCount = 0) THEN
-        RAISE_APPLICATION_ERROR(-20076, 'No Record Found.', true);
+        RAISE_APPLICATION_ERROR(-20007, 'No Record Found.', true);
     ELSE
         DBMS_OUTPUT.PUT_LINE(chr(10));
         DBMS_OUTPUT.PUT_LINE(RPAD('*', 58, ' ') || RPAD('-', 23, '-'));

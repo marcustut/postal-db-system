@@ -1,6 +1,5 @@
 -- Author: Tang Xiao Zu
 
--- Oracle settings
 SET TERMOUT OFF 
 SET LINESIZE 180
 SET PAGESIZE 100
@@ -14,15 +13,12 @@ COLUMN cust_id FORMAT 99999 HEADING 'Customer ID'
 COLUMN total_order FORMAT 9999 HEADING 'Total Order'
 COLUMN total_amount FORMAT 9999 HEADING 'Total Price'
 
--- Clear screen
 cl scr
 
--- Description of query
 PROMPT This query is for management to check top customer based on their number of orders
 PROMPT and the payment they made based on year.
 PROMPT
 
--- Get user input
 ACCEPT v_year NUMBER PROMPT 'Enter a Year: '
 
 SELECT c.cust_id, count(pc.parcel_id) AS total_order, sum(pm.amount) AS total_amount
