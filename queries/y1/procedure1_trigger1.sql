@@ -120,12 +120,12 @@ SELECT EXTRACT(YEAR FROM SYSDATE) INTO t_year FROM dual;
 
 
 IF (c_exp_year < t_year) THEN
-    RAISE_APPLICATION_ERROR (-20056,'Card had expired, try a new one.');
+    RAISE_APPLICATION_ERROR (-20013,'Card had expired, try a new one.');
 ELSIF (c_exp_year = t_year) THEN 
     IF (c_exp_month = t_month) THEN
-        RAISE_APPLICATION_ERROR (-20057,'Card will be expired in this month, try a new one.');
+        RAISE_APPLICATION_ERROR (-20012,'Card will be expired in this month, try a new one.');
     ELSIF (c_exp_month < t_month) THEN
-       RAISE_APPLICATION_ERROR (-20056,'Card had expired, try a new one.');
+       RAISE_APPLICATION_ERROR (-20013,'Card had expired, try a new one.');
     END IF;
 END IF;
 
