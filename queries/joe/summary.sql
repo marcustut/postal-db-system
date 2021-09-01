@@ -7,11 +7,10 @@ ALTER SESSION SET NLS_DATE_FORMAT = 'DD/MM/YYYY';
 SET TERMOUT ON
 SET VERIFY OFF
 
-CREATE OR REPLACE PROCEDURE RPT_STAFF_PERFORMANCE(S_YEAR IN NUMBER) IS
---staffid, staffname, email, phone, branch, totalparceldelivered, amountoftheparcel, percentage 
+CREATE OR REPLACE PROCEDURE RPT_STAFF_PERFORMANCE(S_YEAR IN NUMBER) IS 
 
 E_NO_RECORD_FOUND EXCEPTION;
-PRAGMA EXCEPTION_INIT(E_NO_RECORD_FOUND, -20076);
+PRAGMA EXCEPTION_INIT(E_NO_RECORD_FOUND, -20007);
 dev_month "Delivery".delivery_date%TYPE;
 v_totalParcel NUMBER(5) := 0;
 v_totalAmt NUMBER(10,2) := 0;
@@ -35,7 +34,7 @@ FROM "Staff" S, "Delivery" D, "Parcel" P, "Payment" Pm, "Order" O
 WHERE S.staff_id = D.staff_id AND D.delivery_id = P.delivery_id AND P.order_id = O.order_id AND O.payment_id = Pm.payment_id 
         AND EXTRACT(MONTH FROM D.delivery_date) = s_month AND EXTRACT(YEAR FROM D.delivery_date) = S_YEAR
 GROUP BY S.staff_id, S.staff_name, S.email, S.phone, S.branch
-ORDER BY S.staff_id; 
+ORDER BY total_parcel DESC; 
 
 BEGIN 
     SELECT COUNT(created_at) INTO recordCount
@@ -43,7 +42,7 @@ BEGIN
     WHERE EXTRACT(YEAR FROM created_at) = S_YEAR;
 
     IF (recordCount = 0) THEN
-        RAISE_APPLICATION_ERROR(-20076, 'No Record Found.', true);
+        RAISE_APPLICATION_ERROR(-20007, 'No Record Found.', true);
     ELSE
         DBMS_OUTPUT.PUT_LINE(chr(10));
         DBMS_OUTPUT.PUT_LINE(RPAD('*', 58, ' ') || RPAD('-', 23, '-'));

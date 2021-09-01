@@ -11,9 +11,9 @@ CREATE OR REPLACE PROCEDURE PRC_UPDATE_RECORD(dCustID IN NUMBER, dOrderID IN NUM
 	E_CUSTOMER_NOT_FOUND EXCEPTION;
     E_ORDER_NOT_FOUND EXCEPTION;
     E_INSURANCE_CLAIM_ERROR EXCEPTION;
-    PRAGMA EXCEPTION_INIT(E_CUSTOMER_NOT_FOUND, -20069);
-    PRAGMA EXCEPTION_INIT(E_ORDER_NOT_FOUND, -20070);
-    PRAGMA EXCEPTION_INIT(E_INSURANCE_CLAIM_ERROR, -20071);
+    PRAGMA EXCEPTION_INIT(E_CUSTOMER_NOT_FOUND, -20004);
+    PRAGMA EXCEPTION_INIT(E_ORDER_NOT_FOUND, -20005);
+    PRAGMA EXCEPTION_INIT(E_INSURANCE_CLAIM_ERROR, -20006);
     v_insuranceid "Insurance".insurance_id%TYPE;
     v_insuranceclaim "Order".insurance_claim%TYPE;
 
@@ -50,13 +50,16 @@ BEGIN
     WHERE order_id = dOrderID AND insurance_id = v_insuranceid;
 
     IF(v_insuranceclaim = 'Y') THEN
-        RAISE_APPLICATION_ERROR(-20071, '[ERROR]Insurance already claimed! ');
+        RAISE_APPLICATION_ERROR(-20006, '[ERROR]Insurance already claimed! ');
     END IF;
 
     UPDATE "Order"
     SET insurance_claim = 'Y'
     WHERE order_id = dOrderID AND insurance_id = v_insuranceid; 
 
+    DBMS_OUTPUT.PUT_LINE('-------------------------------');
+    DBMS_OUTPUT.PUT_LINE('Insurance Successfully Updated!');
+    DBMS_OUTPUT.PUT_LINE('-------------------------------');
 
     EXCEPTION 
         WHEN E_CUSTOMER_NOT_FOUND THEN

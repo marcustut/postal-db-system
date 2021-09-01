@@ -1,6 +1,5 @@
 -- Author: Tang Xiao Zu
 
--- Oracle settings
 SET TERMOUT OFF 
 SET LINESIZE 180
 SET PAGESIZE 100
@@ -16,15 +15,12 @@ COLUMN year FORMAT A5 HEADING 'Year';
 COLUMN total_parcel FORMAT 999 HEADING 'Total Parcel';
 COLUMN percentage FORMAT 99.99 HEADING 'Percentage';
 
--- Clear screen
 cl scr
 
--- Description of query
 PROMPT This query is a breakdown for management to track the statuses of the parcel
 PROMPT based on area in a year. 
 PROMPT
 
--- Get user input
 ACCEPT s_year NUMBER PROMPT 'Enter a Year: ';
 ACCEPT s_status PROMPT 'Enter a status: '; 
 

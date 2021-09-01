@@ -10,7 +10,7 @@ SET VERIFY OFF
 -- Clear screen
 cl scr
 
-TTITLE CENTER 'Highest Number of Delivery Daily' SKIP 2
+TTITLE 'Highest Number of Delivery Daily' SKIP 2
 
 COLUMN delivery_date FORMAT A20 HEADING 'Delivery Date';
 COLUMN branch FORMAT A20 HEADING 'Branch';
