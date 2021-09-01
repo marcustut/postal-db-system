@@ -133,7 +133,7 @@ END IF;
 
 END;
 /
-
+--select * from "PaymentMethod" where cust_id=3916;
 --exec PRC_ADD_PAYMENT_METHOD(3916,'card');
 -- exec PRC_ADD_PAYMENT_METHOD(3916,'grabpay');
 --exec PRC_ADD_PAYMENT_METHOD(3916,'card','visa','Wong Wai Yi',12,2023,'1234');

@@ -145,6 +145,6 @@ UPDATE "Parcel" SET updated_at = sysdate WHERE parcel_id = :old.parcel_ID;
 
 END;
 /
-
+--select * from "Order" where cust_id=4000; 
 --exec PRC_ADD_ORDER(4000, 13001, 5000, 7004);
 -- SELECT * FROM "Parcel" WHERE parcel_id = 13001;
