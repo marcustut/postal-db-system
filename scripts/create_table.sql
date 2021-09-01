@@ -174,7 +174,7 @@ CREATE TABLE "Address" (
   city                VARCHAR2(60) NOT NULL,
   line1               VARCHAR2(255) NOT NULL,
   line2               VARCHAR2(255),
-  postal_code         CHAR(5) NOT NULL,
+  postal_code         VARCHAR2(5) NOT NULL,
   created_at          DATE DEFAULT SYSDATE NOT NULL,
   updated_at          DATE DEFAULT SYSDATE NOT NULL,
 CONSTRAINT address_pk PRIMARY KEY (address_id)

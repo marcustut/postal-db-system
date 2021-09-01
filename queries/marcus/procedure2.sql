@@ -10,7 +10,7 @@ cl scr
 PROMPT This procedure will help to make payment for a user-specifed order.
 PROMPT
 PROMPT By running this, following four things will be created
-PROMPT 1. prc_make_payment (SEQUENCE)
+PROMPT 1. prc_make_payment (PROCEDURE)
 PROMPT
 
 -- Prompt Users whether to create procedure
@@ -23,8 +23,8 @@ DROP PROCEDURE prc_make_payment;
 -- This procedure will help to make payment
 CREATE PROCEDURE prc_make_payment(in_order_id IN NUMBER, in_credit IN NUMBER) IS
   -- Define error code
-  ERR_CODE_PAYMENT_NOT_PROCESSING CONSTANT NUMBER := -20063;
-  ERR_CODE_CREDIT_NOT_ENOUGH CONSTANT NUMBER := -20064;
+  ERR_CODE_PAYMENT_NOT_PROCESSING CONSTANT NUMBER := -20023;
+  ERR_CODE_CREDIT_NOT_ENOUGH CONSTANT NUMBER := -20024;
 
   -- Define exceptions
   e_payment_not_processing EXCEPTION;

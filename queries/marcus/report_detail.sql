@@ -1,4 +1,6 @@
 -- Author: Marcus Lee Kai Yang
+-- must create the 'func_percentage' function first
+-- must create the 'branch_parcels' view first
 
 -- Oracle settings
 SET TERMOUT OFF 
@@ -14,7 +16,7 @@ cl scr
 -- Report (Detail): Compare parcels delivered and canceled for each year
 CREATE OR REPLACE PROCEDURE rpt_parcels IS
   -- Define error code
-  ERR_CODE_FETCH_TOTAL_FAILED CONSTANT NUMBER := -20065;
+  ERR_CODE_FETCH_TOTAL_FAILED CONSTANT NUMBER := -20029;
 
   -- Define execeptions
   e_fetch_total_failed EXCEPTION;
@@ -107,9 +109,9 @@ BEGIN
       DBMS_OUTPUT.PUT_LINE('| ' || RPAD(branch_parcel."State", 20, ' ') || ' | ' 
                            || LPAD(branch_parcel."Canceled" || ' (' 
                            || LPAD(func_percentage(branch_parcel."Canceled", v_total_canceled), 5, ' ') 
-                           || '%)', 16, ' ') || ' | ' || LPAD(branch_parcel."Delivered" || ' (' 
+                           || ')', 16, ' ') || ' | ' || LPAD(branch_parcel."Delivered" || ' (' 
                            || LPAD(func_percentage(branch_parcel."Delivered", v_total_delivered), 5, ' ') 
-                           || '%)', 17, ' ') || ' |');
+                           || ')', 17, ' ') || ' |');
     END LOOP;
 
     v_total := v_total_canceled + v_total_delivered;
@@ -118,14 +120,14 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE(RPAD('-', 63, '-'));
     DBMS_OUTPUT.PUT_LINE('| ' || LPAD('TOTAL', 20, ' ') || ' | ' || LPAD(v_total_canceled || ' (' 
                          || LPAD(func_percentage(v_total_canceled, v_total), 6, ' ') 
-                         || '%)', 16, ' ') || ' | ' || LPAD(v_total_delivered || ' (' 
+                         || ')', 16, ' ') || ' | ' || LPAD(v_total_delivered || ' (' 
                          || LPAD(func_percentage(v_total_delivered, v_total), 6, ' ') 
-                         || '%)', 17, ' ') || ' |');
+                         || ')', 17, ' ') || ' |');
     DBMS_OUTPUT.PUT_LINE(RPAD('-', 63, '-'));
 
     DBMS_OUTPUT.PUT_LINE(CHR(10) || func_percentage(v_total_canceled, v_total) 
-                         || '% parcels is canceled and ' || func_percentage(v_total_delivered, v_total)
-                         || '% parcels is delivered in ' || year_rec.Year || '.' || CHR(10));
+                         || ' parcels is canceled and ' || func_percentage(v_total_delivered, v_total)
+                         || ' parcels is delivered in ' || year_rec.Year || '.' || CHR(10));
   END LOOP;
 
   EXCEPTION
@@ -134,4 +136,4 @@ BEGIN
 END;
 /
 
-exec rpt_parcels();
+-- exec rpt_parcels();

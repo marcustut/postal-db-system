@@ -1,5 +1,6 @@
 -- Author: Marcus Lee Kai Yang
 -- must create the 'insurance_claim' view first
+-- must create the 'func_percentage' function first
 
 -- Oracle settings
 SET TERMOUT OFF 
@@ -15,7 +16,7 @@ cl scr
 -- Report (Summary): Summary of earnings of all branch in a given year
 CREATE OR REPLACE PROCEDURE rpt_earnings(in_year IN NUMBER) IS 
   -- Define error code
-  ERR_CODE_EARNING_NOT_FOUND CONSTANT NUMBER := -20021;
+  ERR_CODE_EARNING_NOT_FOUND CONSTANT NUMBER := -20028;
 
   -- Define exceptions
   e_earning_not_found EXCEPTION;
@@ -49,7 +50,7 @@ CREATE OR REPLACE PROCEDURE rpt_earnings(in_year IN NUMBER) IS
   -- Variables for working with the cursor
   v_current_earning earnings_cursor%ROWTYPE;
 
-  -- Variables for eaning figures
+  -- Variables for earning figures
   v_total_parcel_delivered NUMBER := 0;
   v_total_sales NUMBER := 0;
   v_total_tax NUMBER := 0;

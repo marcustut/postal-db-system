@@ -11,10 +11,10 @@ SET VERIFY OFF
 -- Clear screen
 cl scr
 
--- Report (On demand): Show top customers give year and quantity
+-- Report (On demand): Show top customers give a year and quantity
 CREATE OR REPLACE PROCEDURE rpt_top_customers(in_year IN NUMBER, in_top IN NUMBER) IS
   -- Define error code
-  ERR_CODE_CUSTOMER_NOT_FOUND CONSTANT NUMBER := -20020;
+  ERR_CODE_CUSTOMER_NOT_FOUND CONSTANT NUMBER := -20030;
 
   -- Define exceptions
   e_customer_not_found EXCEPTION;
@@ -104,4 +104,3 @@ END;
 -- [VALID] exec rpt_top_customers(2020, 20);
 -- [VALID] exec rpt_top_customers(2020, 10);
 -- [INVALID] exec rpt_top_customers(2022, 20);
-exec rpt_top_customers(2020, 20);
