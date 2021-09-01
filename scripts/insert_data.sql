@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------------
--- Name         : Online Postal Delivery System 
+-- Name         : EasyDelivery's Online Postal System
 -- Author       : Lee Kai Yang, Wong Wai Yi, Tang Xiao Zu
 -- Version      : 1.0
 -- Last Updated : 16/07/2021

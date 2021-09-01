@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------------
--- Name         : Online Postal Delivery System 
+-- Name         : EasyDelivery's Online Postal System 
 -- Author       : Lee Kai Yang, Wong Wai Yi, Tang Xiao Zu
 -- Version      : 1.0
 -- Last Updated : 16/07/2021
@@ -34,7 +34,7 @@ SET VERIFY OFF -- Turn off the verification for PL/SQL
 
 -- Startup Screen for Users
 cl scr
-PROMPT Welcome to DBMS of Online Postal Delivery System
+PROMPT Welcome to DBMS of EasyDelivery's Online Postal System
 PROMPT
 
 ----------------------------
