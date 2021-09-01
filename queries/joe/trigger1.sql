@@ -16,11 +16,13 @@ BEGIN
 
     SELECT parcel_id INTO u_parcelid
     FROM "Parcel" Pa, "Order" O
-    WHERE Pa.order_id = O.order_id AND O.order_id = u_orderid;
+    WHERE Pa.order_id = O.order_id AND O.order_id = u_orderid
+    FETCH FIRST 1 ROW ONLY;
 
     SELECT tracking_id INTO u_trackingid
     FROM "Tracking" Tr, "Parcel" Pa
-    WHERE Tr.parcel_id = Pa.parcel_id AND Tr.parcel_id = u_parcelid; 
+    WHERE Tr.parcel_id = Pa.parcel_id AND Tr.parcel_id = u_parcelid
+    FETCH FIRST 1 ROW ONLY; 
 
     UPDATE "Tracking"
     SET status = 'canceled'
