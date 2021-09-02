@@ -23,7 +23,7 @@ cl scr
 PROMPT This query is for staff to check receipient address and contact details 
 PROMPT based on the delivery id. 
 PROMPT
-PROMPT Example Delivery ID: 11001
+PROMPT Example Delivery ID: 11003
 PROMPT
 
 ACCEPT v_deliver_id NUMBER PROMPT 'Enter Delivery ID: '
