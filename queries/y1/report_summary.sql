@@ -9,10 +9,10 @@ SET VERIFY OFF
 
 
 CREATE OR REPLACE VIEW insurance_claim_view as 
-    select insurance_id, COUNT(insurance_id) as i_claim
+    select insurance_id, EXTRACT(YEAR FROM created_at) AS yearly, COUNT(insurance_id) as i_claim
     FROM "Order"
-    WHERE insurance_claim= 'Y' AND EXTRACT(YEAR FROM created_at) = 2019
-    GROUP BY insurance_id;
+    WHERE insurance_claim= 'Y'
+    GROUP BY insurance_id, EXTRACT(YEAR FROM created_at);
 
 CREATE OR REPLACE PROCEDURE RPT_INSURANCE(IN_YEAR IN number) IS 
 i_ins_percent number;
@@ -31,7 +31,7 @@ CURSOR INSURANCE_ORDER_CURSOR IS
         SELECT COUNT(insurance_id) FROM "Order" WHERE EXTRACT(YEAR FROM created_at) = IN_YEAR
     ) * 100 AS i_ins_percent
     FROM "Insurance" I, "Order" O, insurance_claim_view V
-    WHERE I.insurance_id = O.insurance_id AND EXTRACT(YEAR FROM O.created_at) = IN_YEAR AND I.insurance_id = V.insurance_id
+    WHERE I.insurance_id = O.insurance_id AND EXTRACT(YEAR FROM O.created_at) = IN_YEAR AND I.insurance_id = V.insurance_id AND V.yearly=IN_YEAR
     GROUP BY I.insurance_id, I.type, I.price, V.i_claim
     ORDER BY I.insurance_id;
 ins_rec INSURANCE_ORDER_CURSOR%ROWTYPE;

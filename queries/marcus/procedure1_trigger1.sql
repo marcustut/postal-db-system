@@ -157,3 +157,5 @@ END;
 
 -- [INVALID] exec prc_assign_parcel_to_staff(1300112312);
 -- [VALID] exec prc_assign_parcel_to_staff(13001);
+
+-- SELECT * FROM "Delivery" WHERE delivery_id = ;

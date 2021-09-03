@@ -19,3 +19,4 @@ BEGIN
 END;
 /
 
+-- insert into "Address" (country, state, city, line1, line2, postal_code, created_at, updated_at) values ('Malaysia', 'Malacca', 'Sri Petaling', '0113 Briar Crest Terrace', '5 Village Plaza', '26620', '22/03/2021', '24/03/2021');
